@@ -1,0 +1,23 @@
+[package]
+name = "bigtable"
+version = "0.1.0"
+authors = ["Drazen Urch <github@drazenur.ch>"]
+
+[dependencies]
+grpc = { git = "https://github.com/stepancheg/grpc-rust" }
+protobuf = { git = "http://github.com/stepancheg/rust-protobuf" }
+futures = "0.1"
+futures-cpupool = "0.1"
+
+smpl_jwt = "0.1"
+log = "0.3"
+curl = "0.4"
+curl-sys = "0.3"
+solicit = {version = "0.4.0", features = ["openssl"]}
+openssl = "0.6"
+#serde = "0.8"
+#serde_json = "0.8"
+#serde_derive = "0.8"
+
+pbuf = { path="../pbuf" }
+goauth = { path="../rust_goauth" }
