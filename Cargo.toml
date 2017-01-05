@@ -1,23 +1,24 @@
 [package]
-name = "bigtable"
+name = "google_bigtable"
 version = "0.1.0"
 authors = ["Drazen Urch <github@drazenur.ch>"]
+description = "Lib for interfacing with Google BigTable Data API"
+repository = "https://github.com/durch/rust-bigtable"
+readme = "README.md"
+keywords = ["Google", "Cloud", "BigTable", "Data", "API"]
+license = "MIT"
+documentation = "https://durch.github.io/rust-bigtable"
+
+[lib]
+name = "google_bigtable"
+path = "src/lib.rs"
 
 [dependencies]
-grpc = { git = "https://github.com/stepancheg/grpc-rust" }
-protobuf = { git = "http://github.com/stepancheg/rust-protobuf" }
-futures = "0.1"
-futures-cpupool = "0.1"
-
+protobuf = "1.0.24"
 smpl_jwt = "0.1"
+goauth = "0.1"
 log = "0.3"
 curl = "0.4"
-curl-sys = "0.3"
-solicit = {version = "0.4.0", features = ["openssl"]}
-openssl = "0.6"
-#serde = "0.8"
-#serde_json = "0.8"
-#serde_derive = "0.8"
-
-pbuf = { path="../pbuf" }
-goauth = { path="../rust_goauth" }
+serde = "0.8"
+serde_json = "0.8"
+rustc-serialize = "0.3"
