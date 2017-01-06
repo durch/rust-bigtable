@@ -63,11 +63,13 @@ macro_rules! method {
 /// ### ReadRows
 ///
 /// ```
-/// extern crate google_bigtable as bt;
+/// # #![allow(unused_imports)]
+/// extern crate bigtable as bt;
+/// extern crate serde_json;
 ///
 /// use bt::request::BTRequest;
 /// use bt::data::ReadModifyWriteRule;
-/// use bt::utils::{encode_str, get_auth_token};
+/// use bt::utils::*;
 /// use bt::method::{BigTable, ReadRows};
 /// # use bt::error::BTErr;
 ///
@@ -76,34 +78,225 @@ macro_rules! method {
 /// const PK: &'static str = "random_rsa_for_tests";
 ///
 /// fn main() {
+/// # #[allow(dead_code)]
 /// # fn wrapper() -> Result<(), BTErr> {
 ///     let req = BTRequest {
 ///                          base: None,
 ///                          table: Default::default(),
 ///                          method: ReadRows::new()
 ///                    };
-///     let response = req.execute(&get_auth_token(TOKEN_URL, ISS, PK)?);
+///     let response = req.execute(&get_auth_token(TOKEN_URL, ISS, PK)?)?;
+///     println!("{}", serde_json::to_string_pretty(&response)?);
 /// # Ok(())
 /// # }
 /// }
 /// ```
 fn read_rows_doctest() {}
 method!(ReadRows, ReadRowsRequest, true);
-method!(SampleRowKeys, SampleRowKeysRequest, false);
-method!(MutateRow, MutateRowRequest, true);
-method!(MutateRows, MutateRowsRequest, true);
-method!(CheckAndMutateRow, CheckAndMutateRowRequest, true);
-/// ### ReadWriteModify
+
+/// ### SampleRowKeys
 ///
 /// ```
+/// # #![allow(unused_imports)]
+/// extern crate bigtable as bt;
+/// extern crate serde_json;
+///
+/// use bt::request::BTRequest;
+/// use bt::data::ReadModifyWriteRule;
+/// use bt::utils::*;
+/// use bt::method::{BigTable, SampleRowKeys};
+/// # use bt::error::BTErr;
+///
+/// const TOKEN_URL: &'static str = "https://www.googleapis.com/oauth2/v4/token";
+/// const ISS: &'static str = "service_acc@developer.gserviceaccount.com";
+/// const PK: &'static str = "random_rsa_for_tests";
+///
+/// fn main() {
+/// # #[allow(dead_code)]
+/// # fn wrapper() -> Result<(), BTErr> {
+///     let req = BTRequest {
+///                          base: None,
+///                          table: Default::default(),
+///                          method: SampleRowKeys::new()
+///                    };
+///     let response = req.execute(&get_auth_token(TOKEN_URL, ISS, PK)?)?;
+///     println!("{}", serde_json::to_string_pretty(&response)?);
+/// # Ok(())
+/// # }
+/// }
+/// ```
+fn sample_row_keys_doctest() {}
+method!(SampleRowKeys, SampleRowKeysRequest, false);
+
+/// ### MutateRow
+///
+/// ```
+/// # #![allow(unused_imports)]
+/// extern crate bigtable as bt;
+/// extern crate serde_json;
 /// extern crate protobuf;
-/// extern crate google_bigtable as bt;
+///
+/// use protobuf::RepeatedField;
+///
+/// use bt::request::BTRequest;
+/// use bt::utils::*;
+/// use bt::method::{BigTable, MutateRow};
+/// use bt::data::{Mutation, Mutation_DeleteFromRow};
+/// # use bt::error::BTErr;
+///
+/// const TOKEN_URL: &'static str = "https://www.googleapis.com/oauth2/v4/token";
+/// const ISS: &'static str = "service_acc@developer.gserviceaccount.com";
+/// const PK: &'static str = "random_rsa_for_tests";
+///
+/// fn main() {
+/// # #[allow(dead_code)]
+/// # fn wrapper() -> Result<(), BTErr> {
+///     let mut req = BTRequest {
+///                          base: None,
+///                          table: Default::default(),
+///                          method: MutateRow::new()
+///                    };
+///
+///     let row_key = row_key_from_str("r1");
+///
+///     let mut mutations: Vec<Mutation> = Vec::new();
+///     let mut delete_row_mutation = Mutation::new();
+///     delete_row_mutation.set_delete_from_row(Mutation_DeleteFromRow::new());
+///     mutations.push(delete_row_mutation);
+///
+///     req.method.payload_mut().set_row_key(row_key);
+///     req.method.payload_mut().set_mutations(RepeatedField::from_vec(mutations));
+///
+///     let response = req.execute(&get_auth_token(TOKEN_URL, ISS, PK)?)?;
+///     println!("{}", serde_json::to_string_pretty(&response)?);
+/// # Ok(())
+/// # }
+/// }
+/// ```
+fn mutate_row_doctest() {}
+method!(MutateRow, MutateRowRequest, true);
+
+/// ### MutateRows
+///
+/// ```
+/// # #![allow(unused_imports)]
+/// extern crate bigtable as bt;
+/// extern crate serde_json;
+/// extern crate protobuf;
+///
+/// use protobuf::RepeatedField;
+///
+/// use bt::request::BTRequest;
+/// use bt::utils::*;
+/// use bt::method::{BigTable, MutateRows};
+/// use bt::data::{Mutation, Mutation_DeleteFromRow};
+/// use bt::bigtable::MutateRowsRequest_Entry;
+/// # use bt::error::BTErr;
+///
+/// const TOKEN_URL: &'static str = "https://www.googleapis.com/oauth2/v4/token";
+/// const ISS: &'static str = "service_acc@developer.gserviceaccount.com";
+/// const PK: &'static str = "random_rsa_for_tests";
+///
+/// fn main() {
+/// # #[allow(dead_code)]
+/// # fn wrapper() -> Result<(), BTErr> {
+///     let mut req = BTRequest {
+///                          base: None,
+///                          table: Default::default(),
+///                          method: MutateRows::new()
+///                    };
+///
+///     let mut mutate_entries = Vec::new();
+///     let mut mutate_entry = MutateRowsRequest_Entry::new();
+///
+///     let row_key = row_key_from_str("r1");
+///
+///     let mut mutations: Vec<Mutation> = Vec::new();
+///     let mut delete_row_mutation = Mutation::new();
+///     delete_row_mutation.set_delete_from_row(Mutation_DeleteFromRow::new());
+///
+///     mutations.push(delete_row_mutation);
+///     mutate_entry.set_mutations(RepeatedField::from_vec(mutations));
+///     mutate_entry.set_row_key(row_key);
+///     mutate_entries.push(mutate_entry);
+///
+///     req.method.payload_mut().set_entries(RepeatedField::from_vec(mutate_entries));
+///
+///     let response = req.execute(&get_auth_token(TOKEN_URL, ISS, PK)?)?;
+///     println!("{}", serde_json::to_string_pretty(&response)?);
+/// # Ok(())
+/// # }
+/// }
+/// ```
+fn mutate_rows_doctest() {}
+method!(MutateRows, MutateRowsRequest, true);
+
+/// ### CheckAndMutateRow
+///
+/// ```
+/// # #![allow(unused_imports)]
+/// extern crate bigtable as bt;
+/// extern crate serde_json;
+/// extern crate protobuf;
+///
+/// use protobuf::RepeatedField;
+///
+/// use bt::request::BTRequest;
+/// use bt::utils::*;
+/// use bt::method::{BigTable, CheckAndMutateRow};
+/// use bt::data::{RowFilter, Mutation_DeleteFromRow, Mutation};
+/// use bt::bigtable::MutateRowsRequest_Entry;
+/// # use bt::error::BTErr;
+///
+/// const TOKEN_URL: &'static str = "https://www.googleapis.com/oauth2/v4/token";
+/// const ISS: &'static str = "service_acc@developer.gserviceaccount.com";
+/// const PK: &'static str = "random_rsa_for_tests";
+///
+/// fn main() {
+/// # #[allow(dead_code)]
+/// # fn wrapper() -> Result<(), BTErr> {
+///     let mut req = BTRequest {
+///                          base: None,
+///                          table: Default::default(),
+///                          method: CheckAndMutateRow::new()
+///                    };
+///
+///     let row_key = row_key_from_str("r1");
+///
+///     let mut predicate_filter = RowFilter::new();
+///     predicate_filter.set_pass_all_filter(true);
+///
+///     let mut mutations: Vec<Mutation> = Vec::new();
+///     let mut delete_row_mutation = Mutation::new();
+///     delete_row_mutation.set_delete_from_row(Mutation_DeleteFromRow::new());
+///     mutations.push(delete_row_mutation);
+///
+///     req.method.payload_mut().set_row_key(row_key);
+///     req.method.payload_mut().set_predicate_filter(predicate_filter);
+///     req.method.payload_mut().set_true_mutations(RepeatedField::from_vec(mutations));
+///
+///     let response = req.execute(&get_auth_token(TOKEN_URL, ISS, PK)?)?;
+///     println!("{}", serde_json::to_string_pretty(&response)?);
+/// # Ok(())
+/// # }
+/// }
+/// ```
+fn check_and_mutate_row_doctes() {}
+method!(CheckAndMutateRow, CheckAndMutateRowRequest, true);
+
+/// ### ReadWriteModifyRow
+///
+/// ```
+/// # #![allow(unused_imports)]
+/// extern crate protobuf;
+/// extern crate bigtable as bt;
+/// extern crate serde_json;
 ///
 /// use protobuf::RepeatedField;
 ///
 /// use bt::request::BTRequest;
 /// use bt::data::ReadModifyWriteRule;
-/// use bt::utils::{encode_str, get_auth_token};
+/// use bt::utils::*;
 /// use bt::method::{BigTable, ReadModifyWriteRow};
 /// # use bt::error::BTErr;
 ///
@@ -112,6 +305,7 @@ method!(CheckAndMutateRow, CheckAndMutateRowRequest, true);
 /// const PK: &'static str = "random_rsa_for_tests";
 ///
 /// fn main() {
+/// # #[allow(dead_code)]
 /// # fn wrapper() -> Result<(), BTErr> {
 ///     let mut req = BTRequest {
 ///                              base: None,
@@ -133,6 +327,7 @@ method!(CheckAndMutateRow, CheckAndMutateRowRequest, true);
 ///     req.method.payload_mut().set_rules(RepeatedField::from_vec(rules));
 ///
 ///     let response = req.execute(&token)?;
+///     println!("{}", serde_json::to_string_pretty(&response)?);
 /// # Ok(())
 /// # }
 /// }

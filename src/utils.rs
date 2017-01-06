@@ -22,3 +22,10 @@ pub fn get_auth_token(token_url: &str, iss: &str, pk: &str) -> Result<Token, BTE
     let jwt = Jwt::new(claims, key, None);
     Ok(get_token(&jwt, None)?)
 }
+
+pub fn row_key_from_str(str: &str) -> Vec<u8> {
+    let mut row_key = Vec::new();
+    row_key.extend_from_slice(str.as_bytes());
+    row_key
+
+}

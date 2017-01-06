@@ -1,5 +1,5 @@
 [package]
-name = "google_bigtable"
+name = "bigtable"
 version = "0.1.0"
 authors = ["Drazen Urch <github@drazenur.ch>"]
 description = "Lib for interfacing with Google BigTable Data API"
@@ -10,7 +10,7 @@ license = "MIT"
 documentation = "https://durch.github.io/rust-bigtable"
 
 [lib]
-name = "google_bigtable"
+name = "bigtable"
 path = "src/lib.rs"
 
 [dependencies]
