@@ -25,7 +25,7 @@ Includes support for [JWT auth](https://cloud.google.com/docs/authentication):
 
 Initial plans was to go full `grpc` over `http/2`, unfortunately Rust support is not there yet, so a middle way was taken :).
 
-Requests objects are `protobuf` messages, generated using `proto` definitions available from [Google](https://github.com/googleapis/googleapis/blob/master/google/bigtable/v2/bigtable.proto). And all configuration is done through very nice interfaces generated in this way. These messages are than transparently converted to `json`, and sent to predefined `google.api.http` endpoints, also defined [here](https://github.com/googleapis/googleapis/blob/master/google/bigtable/v2/bigtable.proto). Responses are returned as [serde_json::Value](https://docs.serde.rs/serde_json/value/index.html).
+Requests objects are `protobuf` messages, generated using `proto` definitions available from [Google](https://github.com/googleapis/googleapis/blob/master/google/bigtable/v2/bigtable.proto). And all configuration is done through very nice interfaces generated in this way. These messages are then transparently converted to `json`, and sent to predefined `google.api.http` endpoints, also defined [here](https://github.com/googleapis/googleapis/blob/master/google/bigtable/v2/bigtable.proto). Responses are returned as [serde_json::Value](https://docs.serde.rs/serde_json/value/index.html).
 
 In theory this should enable easy upgrade to full `grpc` over `http/2` as soon as it becomes viable, the only remaining work would be utilising proper return types, also available as `protobuf` messages.
 
@@ -46,7 +46,7 @@ bigtable = '0.1.3'
 
 ##### CheckAndMutateRow
 
-```
+```rust
 # #![allow(unused_imports)]
 extern crate bigtable as bt;
 extern crate serde_json;
@@ -97,7 +97,7 @@ fn main() {
 
 ##### MutateRow
 
-```
+```rust
 # #![allow(unused_imports)]
 extern crate bigtable as bt;
 extern crate serde_json;
@@ -143,7 +143,7 @@ fn main() {
 
 ##### MutateRows
 
-```
+```rust
 # #![allow(unused_imports)]
 extern crate bigtable as bt;
 extern crate serde_json;
@@ -196,7 +196,7 @@ fn main() {
 
 ##### ReadWriteModifyRow
 
-```
+```rust
 # #![allow(unused_imports)]
 extern crate protobuf;
 extern crate bigtable as bt;
@@ -245,7 +245,7 @@ fn main() {
 
 ##### ReadRows
 
-```
+```rust
 # #![allow(unused_imports)]
 extern crate bigtable as bt;
 extern crate serde_json;
@@ -277,7 +277,7 @@ fn main() {
 
 ##### SampleRowKeys
 
-```
+```rust
 # #![allow(unused_imports)]
 extern crate bigtable as bt;
 extern crate serde_json;
