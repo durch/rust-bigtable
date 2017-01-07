@@ -31,7 +31,7 @@ In theory this should enable easy upgrade to full `grpc` over `http/2` as soon a
 
 ### Configuration
 
-You'll need to provide you private key in `pem` (see `random_rsa_for_testing` for proper format) format as well as Google Cloud service account with proper scopes (scopes are handled by [goauth](https://crates.io/crates/goauth), as part of authentication), 
+You'll need to provide you private key in `pem` (see [random_rsa_for_testing](https://github.com/durch/rust-bigtable/blob/master/random_rsa_for_tests) for proper format) format as well as Google Cloud service account with proper scopes (scopes are handled by [goauth](https://crates.io/crates/goauth), as part of authentication), 
 
 ### Usage
 
