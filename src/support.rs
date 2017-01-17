@@ -1,3 +1,4 @@
+#[derive(Clone)]
 pub struct Project {
     pub name: String
 }
@@ -8,6 +9,7 @@ impl Default for Project {
     }
 }
 
+#[derive(Clone)]
 pub struct Instance {
     pub project: Project,
     pub name: String
@@ -19,6 +21,7 @@ impl Default for Instance {
     }
 }
 
+#[derive(Clone)]
 pub struct Table {
     pub instance: Instance,
     pub name: String

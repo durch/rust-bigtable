@@ -1,6 +1,6 @@
 [package]
 name = "bigtable"
-version = "0.1.1"
+version = "0.1.5"
 authors = ["Drazen Urch <github@drazenur.ch>"]
 description = "Lib for interfacing with Google BigTable Data API"
 repository = "https://github.com/durch/rust-bigtable"

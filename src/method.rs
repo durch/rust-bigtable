@@ -157,7 +157,7 @@ method!(SampleRowKeys, SampleRowKeysRequest, false);
 ///                          method: MutateRow::new()
 ///                    };
 ///
-///     let row_key = row_key_from_str("r1");
+///     let row_key = encode_str("r1");
 ///
 ///     let mut mutations: Vec<Mutation> = Vec::new();
 ///     let mut delete_row_mutation = Mutation::new();
@@ -209,7 +209,7 @@ method!(MutateRow, MutateRowRequest, true);
 ///     let mut mutate_entries = Vec::new();
 ///     let mut mutate_entry = MutateRowsRequest_Entry::new();
 ///
-///     let row_key = row_key_from_str("r1");
+///     let row_key = encode_str("r1");
 ///
 ///     let mut mutations: Vec<Mutation> = Vec::new();
 ///     let mut delete_row_mutation = Mutation::new();
@@ -261,7 +261,7 @@ method!(MutateRows, MutateRowsRequest, true);
 ///                          method: CheckAndMutateRow::new()
 ///                    };
 ///
-///     let row_key = row_key_from_str("r1");
+///     let row_key = encode_str("r1");
 ///
 ///     let mut predicate_filter = RowFilter::new();
 ///     predicate_filter.set_pass_all_filter(true);

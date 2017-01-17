@@ -16,6 +16,7 @@ pub mod method;
 pub mod support;
 pub mod request;
 pub mod utils;
+pub mod wraps;
 
 mod to_json;
 

@@ -69,7 +69,7 @@ impl<'a, T: BigTable> BTRequest<'a, T> {
                 Ok(response.len())
             })?;
             transfer.header_function(|header| {
-                print!("header: {}", std::str::from_utf8(header).unwrap());
+                debug!("header: {}", std::str::from_utf8(header).unwrap());
                 true
             })?;
             transfer.perform()?;
