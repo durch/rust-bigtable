@@ -34,9 +34,9 @@ impl<'a, T: BigTable> BTRequest<'a, T> {
         };
         Ok(String::from(format!("{}/projects/{}/instances/{}/tables/{}{}",
                              base,
-                             self.table.get_instance().get_project().get_name(),
-                             self.table.get_instance().get_name(),
-                             self.table.get_name(),
+                             self.table.instance.project.name,
+                             self.table.instance.name,
+                             self.table.name,
                              self.method.url_method()
                     )
         ))

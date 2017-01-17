@@ -1,17 +1,5 @@
-macro_rules! gen_get_name {
-    () => {
-        pub fn get_name(&self) -> &str {
-            &self.name
-        }
-    };
-}
-
 pub struct Project {
-    name: String
-}
-
-impl Project {
-    gen_get_name!();
+    pub name: String
 }
 
 impl Default for Project {
@@ -21,15 +9,8 @@ impl Default for Project {
 }
 
 pub struct Instance {
-    project: Project,
-    name: String
-}
-
-impl Instance {
-    gen_get_name!();
-    pub fn get_project(&self) -> &Project {
-        &self.project
-    }
+    pub project: Project,
+    pub name: String
 }
 
 impl Default for Instance {
@@ -39,15 +20,8 @@ impl Default for Instance {
 }
 
 pub struct Table {
-    instance: Instance,
-    name: String
-}
-
-impl Table {
-    gen_get_name!();
-    pub fn get_instance(&self) -> &Instance {
-        &self.instance
-    }
+    pub instance: Instance,
+    pub name: String
 }
 
 impl Default for Table {
