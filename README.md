@@ -7,7 +7,7 @@
 
 Rust library for working with [Google Bigtable](https://cloud.google.com/bigtable/docs/) [Data API](https://cloud.google.com/bigtable/docs/reference/data/rpc/google.bigtable.v2)
 
-*`requires nightly Rust`*
+*`requires rust >=1.15`*
 
 ### Intro
 Interface towards Cloud Bigtable, supports all [Data API](https://cloud.google.com/bigtable/docs/reference/data/rpc/google.bigtable.v2) methods. 
@@ -39,10 +39,53 @@ You'll need to provide you private key in `pem` (see [random_rsa_for_testing](ht
 
 ```
 [dependencies]
-bigtable = '0.1.3'
+bigtable = '0.1.5'
 ```
 
-#### Examples
+#### Higher level wrappers (`wraps`)
+
+There and higher wrappers available for reading and writing rows, so there is not need to craft `protobufs` manually. Write can also be used to update, but not very robustly yet, coming soon :).
+
+##### Read and Write
+
+Read wrappers allows for simple limit on the number of rows, it uses the `ReadRows` underlying method.
+
+There are two write strategies available, `bulk_write_rows` and `write_rows`. `bulk_write_rows` first collects all writes and fires only one request, underlying method is `MutateRows`, this results in a much higher write throughput. `write_rows` shoots one request per row to be written, underlying method is `ReadModifyWriteRow`. 
+
+```rust
+
+extern crate bigtable as bt
+
+use bt::utils::*;
+use bt::wraps;
+
+const TOKEN_URL: &'static str = "https://www.googleapis.com/oauth2/v4/token";
+const ISS: &'static str = "some-service-account@developer.gserviceaccount.com";
+const PK: &'static str = "pk_for_the_acc_above.pem";
+
+fn read_rows(limit: i64) -> Result<(serde_json::Value), BTErr> {
+
+    let token = get_auth_token(TOKEN_URL, ISS, PK)?;
+    let table = Default::default();
+
+    wraps::read_rows(table, &token, Some(limit))
+
+}
+
+fn write_rows(n: usize, bulk: bool) -> Result<(), BTErr> {
+    let rows = Vec::new(); // use real data here :) Vec<String>
+    let token = get_auth_token(TOKEN_URL, ISS, PK)?;
+    let table = Default::default(); // Again use a real table here
+    if bulk {
+        let _ = wraps::bulk_write_rows(rows, "cf1", "test", None, &token, table);
+    } else {
+        let _ = wraps::write_rows(rows, "cf1", "test", None, &token, table);
+    }
+    Ok(())
+}
+```
+
+#### Basic wrappers
 
 ##### CheckAndMutateRow
 
