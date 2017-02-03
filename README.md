@@ -7,8 +7,6 @@
 
 Rust library for working with [Google Bigtable](https://cloud.google.com/bigtable/docs/) [Data API](https://cloud.google.com/bigtable/docs/reference/data/rpc/google.bigtable.v2)
 
-*`requires rust >=1.15`*
-
 ### Intro
 Interface towards Cloud Bigtable, supports all [Data API](https://cloud.google.com/bigtable/docs/reference/data/rpc/google.bigtable.v2) methods. 
 
@@ -39,7 +37,7 @@ You'll need to provide you private key in `pem` (see [random_rsa_for_testing](ht
 
 ```
 [dependencies]
-bigtable = '0.1.5'
+bigtable = '0.1.6'
 ```
 
 #### Higher level wrappers (`wraps`)
