@@ -27,16 +27,12 @@ pub fn get_row_prefix(prefix: Option<&str>) -> String {
 /// use bt::error::BTErr;
 /// use bt::wraps;
 ///
-/// const TOKEN_URL: &'static str = "https://www.googleapis.com/oauth2/v4/token";
-/// const ISS: &'static str = "service_acc@developer.gserviceaccount.com";
-/// const PK: &'static str = "random_rsa_for_tests";
-///
 /// fn main() {
 /// # #[allow(dead_code)]
 /// # fn write_rows() -> Result<(), BTErr> {
 ///
 ///     let rows: Vec<String> = Vec::new(); // put some real data here
-///     let token = get_auth_token(TOKEN_URL, ISS, PK)?;
+///     let token = get_auth_token("dummy_credentials_file_for_tests.json")?;
 ///     let table = Default::default();
 ///
 ///     let _ = wraps::bulk_write_rows(rows, "cf1", "test", None, &token, table);
@@ -93,16 +89,12 @@ pub fn bulk_write_rows(rows: Vec<String>,
 /// use bt::error::BTErr;
 /// use bt::wraps;
 ///
-/// const TOKEN_URL: &'static str = "https://www.googleapis.com/oauth2/v4/token";
-/// const ISS: &'static str = "service_acc@developer.gserviceaccount.com";
-/// const PK: &'static str = "random_rsa_for_tests";
-///
 /// fn main() {
 /// # #[allow(dead_code)]
 /// # fn write_rows() -> Result<(), BTErr> {
 ///
 ///     let rows: Vec<String> = Vec::new(); // put some real data here
-///     let token = get_auth_token(TOKEN_URL, ISS, PK)?;
+///     let token = get_auth_token("dummy_credentials_file_for_tests.json")?;
 ///     let table = Default::default();
 ///
 ///     let _ = wraps::write_rows(rows, "cf1", "test", None, &token, table);
@@ -154,15 +146,11 @@ pub fn write_rows(rows: Vec<String>,
 /// use bt::error::BTErr;
 /// use bt::wraps;
 ///
-/// const TOKEN_URL: &'static str = "https://www.googleapis.com/oauth2/v4/token";
-/// const ISS: &'static str = "service_acc@developer.gserviceaccount.com";
-/// const PK: &'static str = "random_rsa_for_tests";
-///
 /// fn main() {
 /// # #[allow(dead_code)]
 /// # fn read_rows(limit: i64) -> Result<(), BTErr> {
 ///
-///    let token = get_auth_token(TOKEN_URL, ISS, PK)?;
+///    let token = get_auth_token("dummy_credentials_file_for_tests.json")?;
 ///    let table = Default::default();
 ///
 ///    let _ = wraps::read_rows(table, &token, Some(limit));
@@ -196,16 +184,12 @@ pub fn read_rows(table: Table,
 /// use bt::error::BTErr;
 /// use bt::wraps;
 ///
-/// const TOKEN_URL: &'static str = "https://www.googleapis.com/oauth2/v4/token";
-/// const ISS: &'static str = "service_acc@developer.gserviceaccount.com";
-/// const PK: &'static str = "random_rsa_for_tests";
-///
 /// fn main() {
 /// # #[allow(dead_code)]
 /// # fn write_rows() -> Result<(), BTErr> {
 ///
 ///     let rows: Vec<Vec<u8>> = Vec::new(); // put some real data here
-///     let token = get_auth_token(TOKEN_URL, ISS, PK)?;
+///     let token = get_auth_token("dummy_credentials_file_for_tests.json")?;
 ///     let table = Default::default();
 ///
 ///     let _ = wraps::write_rows_raw(rows, "cf1", "test", None, &token, table);
@@ -257,16 +241,12 @@ pub fn write_rows_raw(rows: Vec<Vec<u8>>,
 /// use bt::error::BTErr;
 /// use bt::wraps;
 ///
-/// const TOKEN_URL: &'static str = "https://www.googleapis.com/oauth2/v4/token";
-/// const ISS: &'static str = "service_acc@developer.gserviceaccount.com";
-/// const PK: &'static str = "random_rsa_for_tests";
-///
 /// fn main() {
 /// # #[allow(dead_code)]
 /// # fn write_rows() -> Result<(), BTErr> {
 ///
 ///     let rows: Vec<Vec<u8>> = Vec::new(); // put some real data here
-///     let token = get_auth_token(TOKEN_URL, ISS, PK)?;
+///     let token = get_auth_token("dummy_credentials_file_for_tests.json")?;
 ///     let table = Default::default();
 ///
 ///     let _ = wraps::bulk_write_rows_raw(rows, "cf1", "test", None, &token, table);

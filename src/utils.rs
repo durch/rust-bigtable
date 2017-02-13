@@ -2,8 +2,9 @@ use rustc_serialize::base64::{ToBase64, STANDARD};
 
 use goauth::auth::{JwtClaims, Token};
 use goauth::scopes::Scope;
-use goauth::get_token;
-use smpl_jwt::{RSAKey, Jwt};
+use goauth::get_token_with_creds;
+use goauth::credentials::Credentials;
+use smpl_jwt::Jwt;
 
 use error::BTErr;
 
@@ -13,14 +14,14 @@ pub fn encode_str(str: &str) -> Vec<u8> {
     v
 }
 
-pub fn get_auth_token(token_url: &str, iss: &str, pk: &str) -> Result<Token, BTErr> {
-    let claims = JwtClaims::new(String::from(iss),
+pub fn get_auth_token(fp: &str) -> Result<Token, BTErr> {
+    let credentials = Credentials::from_file(fp)?;
+    let claims = JwtClaims::new(credentials.iss(),
                              Scope::CloudPlatform,
-                             String::from(token_url),
+                             credentials.token_uri(),
                              None, Some(60));
-    let key = RSAKey::from_pem(pk)?;
-    let jwt = Jwt::new(claims, key, None);
-    Ok(get_token(&jwt, None)?)
+    let jwt = Jwt::new(claims, credentials.rsa_key()?, None);
+    Ok(get_token_with_creds(&jwt, &credentials)?)
 }
 
 pub fn row_key_from_str(str: &str) -> Vec<u8> {

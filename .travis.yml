@@ -9,12 +9,13 @@ addons:
     - binutils-dev
 rust:
 - stable
+- beta
 before_script:
 - |
   pip install 'travis-cargo<0.2' --user &&
   export PATH=$HOME/.local/bin:$PATH
 script:
-- "travis-cargo build &&\ntravis-cargo doc"
+- "travis-cargo build &&\n \ntravis-cargo --only stable doc\n"
 after_success:
 - travis-cargo doc-upload
 - travis-cargo coveralls --no-sudo --verify
