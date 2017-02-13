@@ -16,7 +16,7 @@ path = "src/lib.rs"
 [dependencies]
 protobuf = "1.0.24"
 smpl_jwt = "0.2"
-goauth = {path = "../rust_goauth"}
+goauth = "0.2"
 log = "0.3"
 curl = "0.4"
 serde = "0.9"
