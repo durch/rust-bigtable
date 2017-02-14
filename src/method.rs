@@ -81,7 +81,7 @@ macro_rules! method {
 ///                          table: Default::default(),
 ///                          method: ReadRows::new()
 ///                    };
-///     let response = req.execute(&get_auth_token("dummy_credentials_file_for_tests.json")?)?;
+///     let response = req.execute(&get_auth_token("dummy_credentials_file_for_tests.json", true)?)?;
 ///     println!("{}", serde_json::to_string_pretty(&response)?);
 /// # Ok(())
 /// # }
@@ -111,7 +111,7 @@ method!(ReadRows, ReadRowsRequest, true);
 ///                          table: Default::default(),
 ///                          method: SampleRowKeys::new()
 ///                    };
-///     let response = req.execute(&get_auth_token("dummy_credentials_file_for_tests.json")?)?;
+///     let response = req.execute(&get_auth_token("dummy_credentials_file_for_tests.json", true)?)?;
 ///     println!("{}", serde_json::to_string_pretty(&response)?);
 /// # Ok(())
 /// # }
@@ -155,7 +155,7 @@ method!(SampleRowKeys, SampleRowKeysRequest, false);
 ///     req.method.payload_mut().set_row_key(row_key);
 ///     req.method.payload_mut().set_mutations(RepeatedField::from_vec(mutations));
 ///
-///     let response = req.execute(&get_auth_token("dummy_credentials_file_for_tests.json")?)?;
+///     let response = req.execute(&get_auth_token("dummy_credentials_file_for_tests.json", true)?)?;
 ///     println!("{}", serde_json::to_string_pretty(&response)?);
 /// # Ok(())
 /// # }
@@ -206,7 +206,7 @@ method!(MutateRow, MutateRowRequest, true);
 ///
 ///     req.method.payload_mut().set_entries(RepeatedField::from_vec(mutate_entries));
 ///
-///     let response = req.execute(&get_auth_token("dummy_credentials_file_for_tests.json")?)?;
+///     let response = req.execute(&get_auth_token("dummy_credentials_file_for_tests.json", true)?)?;
 ///     println!("{}", serde_json::to_string_pretty(&response)?);
 /// # Ok(())
 /// # }
@@ -255,7 +255,7 @@ method!(MutateRows, MutateRowsRequest, true);
 ///     req.method.payload_mut().set_predicate_filter(predicate_filter);
 ///     req.method.payload_mut().set_true_mutations(RepeatedField::from_vec(mutations));
 ///
-///     let response = req.execute(&get_auth_token("dummy_credentials_file_for_tests.json")?)?;
+///     let response = req.execute(&get_auth_token("dummy_credentials_file_for_tests.json", true)?)?;
 ///     println!("{}", serde_json::to_string_pretty(&response)?);
 /// # Ok(())
 /// # }
@@ -289,7 +289,7 @@ method!(CheckAndMutateRow, CheckAndMutateRowRequest, true);
 ///                              method: ReadModifyWriteRow::new()
 ///                   };
 ///
-///     let token = get_auth_token("dummy_credentials_file_for_tests.json")?;
+///     let token = get_auth_token("dummy_credentials_file_for_tests.json", true)?;
 ///
 ///     let mut rules: Vec<ReadModifyWriteRule> = Vec::new();
 ///     let mut rule = ReadModifyWriteRule::new();

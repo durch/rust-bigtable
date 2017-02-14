@@ -1,6 +1,7 @@
 #![allow(deprecated)]
 #![allow(dead_code)]
 
+extern crate protobuf_json;
 extern crate goauth;
 extern crate smpl_jwt;
 #[macro_use]
@@ -17,8 +18,6 @@ pub mod support;
 pub mod request;
 pub mod utils;
 pub mod wraps;
-
-mod to_json;
 
 // Generated mods
 pub mod bigtable;

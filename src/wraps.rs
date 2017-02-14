@@ -32,7 +32,7 @@ pub fn get_row_prefix(prefix: Option<&str>) -> String {
 /// # fn write_rows() -> Result<(), BTErr> {
 ///
 ///     let rows: Vec<String> = Vec::new(); // put some real data here
-///     let token = get_auth_token("dummy_credentials_file_for_tests.json")?;
+///     let token = get_auth_token("dummy_credentials_file_for_tests.json", true)?;
 ///     let table = Default::default();
 ///
 ///     let _ = wraps::bulk_write_rows(rows, "cf1", "test", None, &token, table);
@@ -94,7 +94,7 @@ pub fn bulk_write_rows(rows: Vec<String>,
 /// # fn write_rows() -> Result<(), BTErr> {
 ///
 ///     let rows: Vec<String> = Vec::new(); // put some real data here
-///     let token = get_auth_token("dummy_credentials_file_for_tests.json")?;
+///     let token = get_auth_token("dummy_credentials_file_for_tests.json", true)?;
 ///     let table = Default::default();
 ///
 ///     let _ = wraps::write_rows(rows, "cf1", "test", None, &token, table);
@@ -150,7 +150,7 @@ pub fn write_rows(rows: Vec<String>,
 /// # #[allow(dead_code)]
 /// # fn read_rows(limit: i64) -> Result<(), BTErr> {
 ///
-///    let token = get_auth_token("dummy_credentials_file_for_tests.json")?;
+///    let token = get_auth_token("dummy_credentials_file_for_tests.json", true)?;
 ///    let table = Default::default();
 ///
 ///    let _ = wraps::read_rows(table, &token, Some(limit));
@@ -189,7 +189,7 @@ pub fn read_rows(table: Table,
 /// # fn write_rows() -> Result<(), BTErr> {
 ///
 ///     let rows: Vec<Vec<u8>> = Vec::new(); // put some real data here
-///     let token = get_auth_token("dummy_credentials_file_for_tests.json")?;
+///     let token = get_auth_token("dummy_credentials_file_for_tests.json", true)?;
 ///     let table = Default::default();
 ///
 ///     let _ = wraps::write_rows_raw(rows, "cf1", "test", None, &token, table);
@@ -246,7 +246,7 @@ pub fn write_rows_raw(rows: Vec<Vec<u8>>,
 /// # fn write_rows() -> Result<(), BTErr> {
 ///
 ///     let rows: Vec<Vec<u8>> = Vec::new(); // put some real data here
-///     let token = get_auth_token("dummy_credentials_file_for_tests.json")?;
+///     let token = get_auth_token("dummy_credentials_file_for_tests.json", true)?;
 ///     let table = Default::default();
 ///
 ///     let _ = wraps::bulk_write_rows_raw(rows, "cf1", "test", None, &token, table);

@@ -4,11 +4,10 @@ use curl::easy::{Easy, List};
 use method::{BigTable, ReadRows};
 use std;
 use goauth::auth::Token;
-use to_json;
 use serde_json;
 use serde_json::Value;
 use std::io::Read;
-
+use protobuf_json;
 
 pub struct BTRequest<'a, T: BigTable> {
     pub base: Option<&'a str>,
@@ -46,7 +45,7 @@ impl<'a, T: BigTable> BTRequest<'a, T> {
         let mut response_data: Vec<u8> = Vec::new();
         let mut easy = Easy::new();
 
-        let payload = to_json::proto_to_json(self.method.payload());
+        let payload = protobuf_json::proto_to_json(self.method.payload());
         let s_payload = serde_json::to_string(&payload)?;
         let mut b_payload = s_payload.as_bytes();
 

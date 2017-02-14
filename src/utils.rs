@@ -14,8 +14,13 @@ pub fn encode_str(str: &str) -> Vec<u8> {
     v
 }
 
-pub fn get_auth_token(fp: &str) -> Result<Token, BTErr> {
-    let credentials = Credentials::from_file(fp)?;
+pub fn get_auth_token(c: &str, fp: bool) -> Result<Token, BTErr> {
+    let credentials;
+    if fp {
+        credentials = Credentials::from_file(c)?;
+    } else {
+        credentials = Credentials::from_str(c)?;
+    }
     let claims = JwtClaims::new(credentials.iss(),
                              Scope::CloudPlatform,
                              credentials.token_uri(),
