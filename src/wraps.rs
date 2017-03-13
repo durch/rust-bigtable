@@ -295,6 +295,7 @@ fn make_setcell_mutation(column_qualifier: &str, column_family: &str, blob: Vec<
     let mut set_cell = Mutation_SetCell::new();
     set_cell.set_column_qualifier(encode_str(column_qualifier));
     set_cell.set_family_name(String::from(column_family));
+    set_cell.set_timestamp_micros(-1);
     set_cell.set_value(blob);
     set_cell
 }
