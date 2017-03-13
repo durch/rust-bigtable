@@ -37,7 +37,7 @@ You'll need to provide you private key in `pem` (see [random_rsa_for_testing](ht
 
 ```
 [dependencies]
-bigtable = '0.1.6'
+bigtable = '0.2.1'
 ```
 
 #### Higher level wrappers (`wraps`)
