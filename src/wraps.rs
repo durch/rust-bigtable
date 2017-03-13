@@ -7,7 +7,7 @@ use request::BTRequest;
 use data::{ReadModifyWriteRule, Mutation, Mutation_SetCell};
 use bigtable::MutateRowsRequest_Entry;
 use utils::*;
-use method::{BigTable, ReadRows, ReadModifyWriteRow, MutateRows};
+use method::{BigTable, ReadRows, ReadModifyWriteRow, MutateRows, SampleRowKeys};
 use error::BTErr;
 use support::Table;
 use goauth::auth::Token;
@@ -47,16 +47,15 @@ pub fn bulk_write_rows(rows: Vec<String>,
                        row_prefix: Option<&str>,
                        token: &Token,
                        table: Table) -> Result<(), BTErr> {
-
     let mut rows = rows;
 
     let prefix = get_row_prefix(row_prefix);
 
     let mut req = BTRequest {
-                      base: None,
-                      table: table,
-                      method: MutateRows::new()
-                };
+        base: None,
+        table: table,
+        method: MutateRows::new()
+    };
 
     let mut mutate_entries = Vec::new();
 
@@ -109,13 +108,11 @@ pub fn write_rows(rows: Vec<String>,
                   row_prefix: Option<&str>,
                   token: &Token,
                   table: Table) -> Result<usize, BTErr> {
-
     let mut rows = rows;
     let prefix = get_row_prefix(row_prefix);
     let mut total = 0;
 
     for (row_cnt, blob) in rows.drain(..).enumerate() {
-
         let row_key = &format!("{}{}", prefix, row_cnt);
 
         let mut req = BTRequest {
@@ -162,7 +159,6 @@ pub fn write_rows(rows: Vec<String>,
 pub fn read_rows(table: Table,
                  token: &Token,
                  rows_limit: Option<i64>) -> Result<serde_json::Value, BTErr> {
-
     let mut req = BTRequest {
         base: None,
         table: table.clone(),
@@ -199,18 +195,16 @@ pub fn read_rows(table: Table,
 /// }
 /// ```
 pub fn write_rows_raw(rows: Vec<Vec<u8>>,
-                  column_familiy: &str,
-                  column_qualifier: &str,
-                  row_prefix: Option<&str>,
-                  token: &Token,
-                  table: Table) -> Result<usize, BTErr> {
-
+                      column_familiy: &str,
+                      column_qualifier: &str,
+                      row_prefix: Option<&str>,
+                      token: &Token,
+                      table: Table) -> Result<usize, BTErr> {
     let mut rows = rows;
     let prefix = get_row_prefix(row_prefix);
     let mut total = 0;
 
     for (row_cnt, blob) in rows.drain(..).enumerate() {
-
         let row_key = &format!("{}{}", prefix, row_cnt);
 
         let mut req = BTRequest {
@@ -256,21 +250,20 @@ pub fn write_rows_raw(rows: Vec<Vec<u8>>,
 /// }
 /// ```
 pub fn bulk_write_rows_raw(rows: Vec<Vec<u8>>,
-                       column_family: &str,
-                       column_qualifier: &str,
-                       row_prefix: Option<&str>,
-                       token: &Token,
-                       table: Table) -> Result<(), BTErr> {
-
+                           column_family: &str,
+                           column_qualifier: &str,
+                           row_prefix: Option<&str>,
+                           token: &Token,
+                           table: Table) -> Result<(), BTErr> {
     let mut rows = rows;
 
     let prefix = get_row_prefix(row_prefix);
 
     let mut req = BTRequest {
-                      base: None,
-                      table: table,
-                      method: MutateRows::new()
-                };
+        base: None,
+        table: table,
+        method: MutateRows::new()
+    };
 
     let mut mutate_entries = Vec::new();
 
@@ -298,20 +291,29 @@ pub fn bulk_write_rows_raw(rows: Vec<Vec<u8>>,
 
 
 fn make_setcell_mutation(column_qualifier: &str, column_family: &str, blob: Vec<u8>)
-    -> Mutation_SetCell {
+                         -> Mutation_SetCell {
     let mut set_cell = Mutation_SetCell::new();
     set_cell.set_column_qualifier(encode_str(column_qualifier));
     set_cell.set_family_name(String::from(column_family));
-    set_cell.set_timestamp_micros(-1);
     set_cell.set_value(blob);
     set_cell
 }
 
 fn make_readmodifywrite_rule(column_qualifier: &str, column_familiy: &str, blob: Vec<u8>)
-    -> ReadModifyWriteRule {
+                             -> ReadModifyWriteRule {
     let mut rule = ReadModifyWriteRule::new();
     rule.set_family_name(String::from(column_familiy));
     rule.set_column_qualifier(encode_str(column_qualifier));
     rule.set_append_value(blob);
     rule
+}
+
+fn sample_row_keys(token: &Token) -> Result<(), BTErr> {
+    let req = BTRequest {
+        base: None,
+        table: Default::default(),
+        method: SampleRowKeys::new()
+    };
+    let response = req.execute(token)?;
+    Ok(())
 }
