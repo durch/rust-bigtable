@@ -6,6 +6,7 @@ pub trait BigTable {
 
     fn payload(&self) -> &Self::M;
     fn payload_mut(&mut self) -> &mut Self::M;
+    fn set_payload(&mut self, payload: Self::M);
     fn url_method(&self) -> &str;
     fn is_post(&self) -> bool;
 }
@@ -42,6 +43,10 @@ macro_rules! method {
 
             fn payload(&self) -> &Self::M {
                 &self.payload
+            }
+
+            fn set_payload(&mut self, payload: $proto) {
+                self.payload = payload
             }
 
             fn payload_mut(&mut self) -> &mut Self::M {
