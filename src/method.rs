@@ -14,9 +14,9 @@ pub trait BigTable {
 macro_rules! method {
     ($name: ident, $proto: ty, $post: expr) => {
         pub struct $name {
-            payload: $proto,
-            url_method: String,
-            is_post: bool
+            pub payload: $proto,
+            pub url_method: String,
+            pub is_post: bool
         }
 
         impl $name {
