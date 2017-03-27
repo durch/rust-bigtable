@@ -60,7 +60,7 @@ impl Default for Row {
 /// ```
 pub fn bulk_write_rows(rows: &mut Vec<Row>,
                        token: &Token,
-                       table: Table) -> Result<(), BTErr> {
+                       table: Table) -> Result<String, BTErr> {
     let mut rows = rows;
 
     let mut req = BTRequest {
@@ -88,8 +88,8 @@ pub fn bulk_write_rows(rows: &mut Vec<Row>,
 
     req.method.payload_mut().set_entries(RepeatedField::from_vec(mutate_entries));
 
-    let _ = req.execute(token)?;
-    Ok(())
+    let response = req.execute(token)?;
+    Ok(serde_json::to_string(&response)?)
 }
 
 /// ```
@@ -198,12 +198,12 @@ fn make_readmodifywrite_rule(column_qualifier: &str, column_familiy: &str, blob:
     rule
 }
 
-fn sample_row_keys(token: &Token) -> Result<(), BTErr> {
+fn sample_row_keys(token: &Token) -> Result<String, BTErr> {
     let req = BTRequest {
         base: None,
         table: Default::default(),
         method: SampleRowKeys::new()
     };
     let response = req.execute(token)?;
-    Ok(())
+    Ok(serde_json::to_string(&response)?)
 }
