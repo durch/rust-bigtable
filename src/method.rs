@@ -65,7 +65,7 @@ macro_rules! method {
     };
 }
 
-/// ### ReadRows
+/// ### `ReadRows`
 ///
 /// ```
 /// # #![allow(unused_imports)]
@@ -95,7 +95,8 @@ macro_rules! method {
 fn read_rows_doctest() {}
 method!(ReadRows, ReadRowsRequest, true);
 
-/// ### SampleRowKeys
+
+/// ### `SampleRowKeys`
 ///
 /// ```
 /// # #![allow(unused_imports)]
@@ -125,7 +126,7 @@ method!(ReadRows, ReadRowsRequest, true);
 fn sample_row_keys_doctest() {}
 method!(SampleRowKeys, SampleRowKeysRequest, false);
 
-/// ### MutateRow
+/// ### `MutateRow`
 ///
 /// ```
 /// # #![allow(unused_imports)]
@@ -169,7 +170,7 @@ method!(SampleRowKeys, SampleRowKeysRequest, false);
 fn mutate_row_doctest() {}
 method!(MutateRow, MutateRowRequest, true);
 
-/// ### MutateRows
+/// ### `MutateRows`
 ///
 /// ```
 /// # #![allow(unused_imports)]
@@ -220,7 +221,7 @@ method!(MutateRow, MutateRowRequest, true);
 fn mutate_rows_doctest() {}
 method!(MutateRows, MutateRowsRequest, true);
 
-/// ### CheckAndMutateRow
+/// ### `CheckAndMutateRow`
 ///
 /// ```
 /// # #![allow(unused_imports)]
@@ -269,7 +270,7 @@ method!(MutateRows, MutateRowsRequest, true);
 fn check_and_mutate_row_doctes() {}
 method!(CheckAndMutateRow, CheckAndMutateRowRequest, true);
 
-/// ### ReadWriteModifyRow
+/// ### `ReadWriteModifyRow`
 ///
 /// ```
 /// # #![allow(unused_imports)]

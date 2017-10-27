@@ -61,11 +61,10 @@ impl Default for Row {
 pub fn bulk_write_rows(rows: &mut Vec<Row>,
                        token: &Token,
                        table: Table) -> Result<String, BTErr> {
-    let mut rows = rows;
 
     let mut req = BTRequest {
         base: None,
-        table: table,
+        table,
         method: MutateRows::new()
     };
 
@@ -107,7 +106,7 @@ pub fn bulk_write_rows(rows: &mut Vec<Row>,
 ///     let token = get_auth_token("dummy_credentials_file_for_tests.json", true)?;
 ///     let table = Default::default();
 ///
-///     let _ = wraps::write_rows(&mut rows, &token, table);
+///     let _ = wraps::write_rows(&mut rows, &token, &table);
 ///
 /// #    Ok(())
 /// # }
@@ -115,8 +114,7 @@ pub fn bulk_write_rows(rows: &mut Vec<Row>,
 /// ```
 pub fn write_rows(rows: &mut Vec<Row>,
                   token: &Token,
-                  table: Table) -> Result<usize, BTErr> {
-    let mut rows = rows;
+                  table: &Table) -> Result<usize, BTErr> {
     let mut total = 0;
 
     for row in rows.drain(..) {
@@ -156,13 +154,13 @@ pub fn write_rows(rows: &mut Vec<Row>,
 ///    let token = get_auth_token("dummy_credentials_file_for_tests.json", true)?;
 ///    let table = Default::default();
 ///
-///    let _ = wraps::read_rows(table, &token, Some(limit));
+///    let _ = wraps::read_rows(&table, &token, Some(limit));
 ///
 /// # Ok(())
 /// # }
 /// }
 /// ```
-pub fn read_rows(table: Table,
+pub fn read_rows(table: &Table,
                  token: &Token,
                  rows_limit: Option<i64>) -> Result<serde_json::Value, BTErr> {
     let mut req = BTRequest {
