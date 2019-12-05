@@ -1,9 +1,9 @@
-use std;
-use goauth::error::GOErr as go_err;
 use curl::Error as curl_err;
-use serde_json::Error as serde_err;
+use goauth::error::GOErr as go_err;
 use protobuf::error::ProtobufError as pb_err;
+use serde_json::Error as serde_err;
 use smpl_jwt::error::JwtErr as jwt_err;
+use std;
 use std::str::Utf8Error as utf8_err;
 
 macro_rules! impl_from {
@@ -13,7 +13,7 @@ macro_rules! impl_from {
                 BTErr::$enum_ty(e)
             }
         }
-    }
+    };
 }
 
 #[derive(Debug)]
@@ -24,7 +24,7 @@ pub enum BTErr {
     PBErr(pb_err),
     JWTErr(jwt_err),
     UTF8Err(utf8_err),
-    Unknown
+    Unknown,
 }
 
 impl_from!(go_err, GOErr);
@@ -33,7 +33,6 @@ impl_from!(serde_err, SerdeErr);
 impl_from!(pb_err, PBErr);
 impl_from!(jwt_err, JWTErr);
 impl_from!(utf8_err, UTF8Err);
-
 
 impl std::fmt::Display for BTErr {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
@@ -50,15 +49,15 @@ impl std::fmt::Display for BTErr {
 }
 
 impl std::error::Error for BTErr {
-  fn description(&self) -> &str {
-    match *self {
-        BTErr::GOErr(ref e) => e.description(),
-        BTErr::CurlErr(ref e) => e.description(),
-        BTErr::SerdeErr(ref e) => e.description(),
-        BTErr::PBErr(ref e) => e.description(),
-        BTErr::JWTErr(ref e) => e.description(),
-        BTErr::UTF8Err(ref e) => e.description(),
-        BTErr::Unknown => "unknown error",
+    fn description(&self) -> &str {
+        match *self {
+            BTErr::GOErr(ref e) => e.description(),
+            BTErr::CurlErr(ref e) => e.description(),
+            BTErr::SerdeErr(ref e) => e.description(),
+            BTErr::PBErr(ref e) => e.description(),
+            BTErr::JWTErr(ref e) => e.description(),
+            BTErr::UTF8Err(ref e) => e.description(),
+            BTErr::Unknown => "unknown error",
+        }
     }
-  }
 }

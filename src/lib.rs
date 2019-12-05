@@ -1,8 +1,8 @@
 #![allow(deprecated)]
 #![allow(dead_code)]
 
-extern crate protobuf_json;
 extern crate goauth;
+extern crate protobuf_json;
 extern crate smpl_jwt;
 #[macro_use]
 extern crate log;
@@ -11,13 +11,13 @@ extern crate protobuf;
 extern crate serde;
 #[macro_use]
 extern crate serde_derive;
-extern crate serde_json;
 extern crate rustc_serialize;
+extern crate serde_json;
 
 pub mod error;
 pub mod method;
-pub mod support;
 pub mod request;
+pub mod support;
 pub mod utils;
 pub mod wraps;
 
