@@ -31,14 +31,14 @@ impl<'a, T: BigTable> BTRequest<'a, T> {
             Some(x) => x,
             None => "https://bigtable.googleapis.com/v2",
         };
-        Ok(String::from(format!(
+        Ok(format!(
             "{}/projects/{}/instances/{}/tables/{}{}",
             base,
             self.table.instance.project.name,
             self.table.instance.name,
             self.table.name,
             self.method.url_method()
-        )))
+        ))
     }
 
     pub fn execute(&self, token: &Token) -> Result<Value, BTErr> {
