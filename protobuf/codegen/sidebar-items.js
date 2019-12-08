@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["gen",""],["protoc_gen_rust_main",""]]});

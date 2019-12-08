@@ -1,0 +1,1 @@
+initSidebarItems({"fn":[["bulk_write_rows",""],["get_row_prefix",""],["read_rows",""],["write_rows",""]],"struct":[["Row",""]]});
