@@ -1,18 +1,18 @@
-use support::Table;
-use error::BTErr;
 use curl::easy::{Easy, List};
-use method::{BigTable, ReadRows};
-use std;
+use error::BTErr;
 use goauth::auth::Token;
+use method::{BigTable, ReadRows};
+use protobuf_json;
 use serde_json;
 use serde_json::Value;
+use std;
 use std::io::Read;
-use protobuf_json;
+use support::Table;
 
 pub struct BTRequest<'a, T: BigTable> {
     pub base: Option<&'a str>,
     pub table: Table,
-    pub method: T
+    pub method: T,
 }
 
 impl<'a> Default for BTRequest<'a, ReadRows> {
@@ -20,7 +20,7 @@ impl<'a> Default for BTRequest<'a, ReadRows> {
         BTRequest {
             base: None,
             table: Default::default(),
-            method: ReadRows::new()
+            method: ReadRows::new(),
         }
     }
 }
@@ -29,19 +29,19 @@ impl<'a, T: BigTable> BTRequest<'a, T> {
     pub fn form_url(&self) -> Result<String, BTErr> {
         let base = match self.base {
             Some(x) => x,
-            None => "https://bigtable.googleapis.com/v2"
+            None => "https://bigtable.googleapis.com/v2",
         };
-        Ok(String::from(format!("{}/projects/{}/instances/{}/tables/{}{}",
-                             base,
-                             self.table.instance.project.name,
-                             self.table.instance.name,
-                             self.table.name,
-                             self.method.url_method()
-                    )
+        Ok(format!(
+            "{}/projects/{}/instances/{}/tables/{}{}",
+            base,
+            self.table.instance.project.name,
+            self.table.instance.name,
+            self.table.name,
+            self.method.url_method()
         ))
     }
 
-    pub fn execute(&self, token: &Token) -> Result<Value, BTErr>{
+    pub fn execute(&self, token: &Token) -> Result<Value, BTErr> {
         let mut response_data: Vec<u8> = Vec::new();
         let mut easy = Easy::new();
 
@@ -60,9 +60,7 @@ impl<'a, T: BigTable> BTRequest<'a, T> {
 
         {
             let mut transfer = easy.transfer();
-            transfer.read_function(|buf| {
-                Ok(b_payload.read(buf).unwrap_or(0))
-            })?;
+            transfer.read_function(|buf| Ok(b_payload.read(buf).unwrap_or(0)))?;
             transfer.write_function(|response| {
                 response_data.extend_from_slice(response);
                 Ok(response.len())
@@ -85,7 +83,11 @@ impl<'a, T: BigTable> BTRequest<'a, T> {
 
 fn gen_headers(token: &Token) -> Result<List, BTErr> {
     let mut list = List::new();
-    let auth = format!("Authorization: {} {}", token.token_type(), token.access_token());
+    let auth = format!(
+        "Authorization: {} {}",
+        token.token_type(),
+        token.access_token()
+    );
     list.append(&auth)?;
     list.append("Content-Type: application/json")?;
     Ok(list)

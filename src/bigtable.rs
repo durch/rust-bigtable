@@ -3,7 +3,7 @@
 
 // https://github.com/Manishearth/rust-clippy/issues/702
 #![allow(unknown_lints)]
-#![allow(clippy)]
+#![allow(clippy::all)]
 
 #![cfg_attr(rustfmt, rustfmt_skip)]
 
@@ -274,8 +274,8 @@ impl ::protobuf::Message for ReadRowsRequest {
         ::std::any::TypeId::of::<ReadRowsRequest>()
     }
 
-    fn as_any(&self) -> &::std::any::Any {
-        self as &::std::any::Any
+    fn as_any(&self) -> &dyn (::std::any::Any) {
+        self as &dyn (::std::any::Any)
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -517,8 +517,8 @@ impl ::protobuf::Message for ReadRowsResponse {
         ::std::any::TypeId::of::<ReadRowsResponse>()
     }
 
-    fn as_any(&self) -> &::std::any::Any {
-        self as &::std::any::Any
+    fn as_any(&self) -> &dyn (::std::any::Any) {
+        self as &dyn (::std::any::Any)
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -1042,8 +1042,8 @@ impl ::protobuf::Message for ReadRowsResponse_CellChunk {
         ::std::any::TypeId::of::<ReadRowsResponse_CellChunk>()
     }
 
-    fn as_any(&self) -> &::std::any::Any {
-        self as &::std::any::Any
+    fn as_any(&self) -> &dyn (::std::any::Any) {
+        self as &dyn (::std::any::Any)
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -1279,8 +1279,8 @@ impl ::protobuf::Message for SampleRowKeysRequest {
         ::std::any::TypeId::of::<SampleRowKeysRequest>()
     }
 
-    fn as_any(&self) -> &::std::any::Any {
-        self as &::std::any::Any
+    fn as_any(&self) -> &dyn (::std::any::Any) {
+        self as &dyn (::std::any::Any)
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -1496,8 +1496,8 @@ impl ::protobuf::Message for SampleRowKeysResponse {
         ::std::any::TypeId::of::<SampleRowKeysResponse>()
     }
 
-    fn as_any(&self) -> &::std::any::Any {
-        self as &::std::any::Any
+    fn as_any(&self) -> &dyn (::std::any::Any) {
+        self as &dyn (::std::any::Any)
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -1772,8 +1772,8 @@ impl ::protobuf::Message for MutateRowRequest {
         ::std::any::TypeId::of::<MutateRowRequest>()
     }
 
-    fn as_any(&self) -> &::std::any::Any {
-        self as &::std::any::Any
+    fn as_any(&self) -> &dyn (::std::any::Any) {
+        self as &dyn (::std::any::Any)
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -1920,8 +1920,8 @@ impl ::protobuf::Message for MutateRowResponse {
         ::std::any::TypeId::of::<MutateRowResponse>()
     }
 
-    fn as_any(&self) -> &::std::any::Any {
-        self as &::std::any::Any
+    fn as_any(&self) -> &dyn (::std::any::Any) {
+        self as &dyn (::std::any::Any)
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -2135,8 +2135,8 @@ impl ::protobuf::Message for MutateRowsRequest {
         ::std::any::TypeId::of::<MutateRowsRequest>()
     }
 
-    fn as_any(&self) -> &::std::any::Any {
-        self as &::std::any::Any
+    fn as_any(&self) -> &dyn (::std::any::Any) {
+        self as &dyn (::std::any::Any)
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -2363,8 +2363,8 @@ impl ::protobuf::Message for MutateRowsRequest_Entry {
         ::std::any::TypeId::of::<MutateRowsRequest_Entry>()
     }
 
-    fn as_any(&self) -> &::std::any::Any {
-        self as &::std::any::Any
+    fn as_any(&self) -> &dyn (::std::any::Any) {
+        self as &dyn (::std::any::Any)
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -2544,8 +2544,8 @@ impl ::protobuf::Message for MutateRowsResponse {
         ::std::any::TypeId::of::<MutateRowsResponse>()
     }
 
-    fn as_any(&self) -> &::std::any::Any {
-        self as &::std::any::Any
+    fn as_any(&self) -> &dyn (::std::any::Any) {
+        self as &dyn (::std::any::Any)
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -2760,8 +2760,8 @@ impl ::protobuf::Message for MutateRowsResponse_Entry {
         ::std::any::TypeId::of::<MutateRowsResponse_Entry>()
     }
 
-    fn as_any(&self) -> &::std::any::Any {
-        self as &::std::any::Any
+    fn as_any(&self) -> &dyn (::std::any::Any) {
+        self as &dyn (::std::any::Any)
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -3122,8 +3122,8 @@ impl ::protobuf::Message for CheckAndMutateRowRequest {
         ::std::any::TypeId::of::<CheckAndMutateRowRequest>()
     }
 
-    fn as_any(&self) -> &::std::any::Any {
-        self as &::std::any::Any
+    fn as_any(&self) -> &dyn (::std::any::Any) {
+        self as &dyn (::std::any::Any)
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -3318,8 +3318,8 @@ impl ::protobuf::Message for CheckAndMutateRowResponse {
         ::std::any::TypeId::of::<CheckAndMutateRowResponse>()
     }
 
-    fn as_any(&self) -> &::std::any::Any {
-        self as &::std::any::Any
+    fn as_any(&self) -> &dyn (::std::any::Any) {
+        self as &dyn (::std::any::Any)
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -3587,8 +3587,8 @@ impl ::protobuf::Message for ReadModifyWriteRowRequest {
         ::std::any::TypeId::of::<ReadModifyWriteRowRequest>()
     }
 
-    fn as_any(&self) -> &::std::any::Any {
-        self as &::std::any::Any
+    fn as_any(&self) -> &dyn (::std::any::Any) {
+        self as &dyn (::std::any::Any)
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -3783,8 +3783,8 @@ impl ::protobuf::Message for ReadModifyWriteRowResponse {
         ::std::any::TypeId::of::<ReadModifyWriteRowResponse>()
     }
 
-    fn as_any(&self) -> &::std::any::Any {
-        self as &::std::any::Any
+    fn as_any(&self) -> &dyn (::std::any::Any) {
+        self as &dyn (::std::any::Any)
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {

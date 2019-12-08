@@ -1,5 +1,5 @@
-use protobuf::Message;
 use bigtable::*;
+use protobuf::Message;
 
 pub trait BigTable {
     type M: Message;
@@ -16,7 +16,7 @@ macro_rules! method {
         pub struct $name {
             pub payload: $proto,
             pub url_method: String,
-            pub is_post: bool
+            pub is_post: bool,
         }
 
         impl $name {
@@ -32,9 +32,11 @@ macro_rules! method {
                 let first = x.next().unwrap().to_lowercase().next().unwrap();
                 let rest = x.as_str();
 
-                $name { payload: Default::default(),
-                        url_method: format!(":{}{}", first, rest),
-                        is_post: $post}
+                $name {
+                    payload: Default::default(),
+                    url_method: format!(":{}{}", first, rest),
+                    is_post: $post,
+                }
             }
         }
 
@@ -61,7 +63,6 @@ macro_rules! method {
                 self.is_post
             }
         }
-
     };
 }
 
@@ -94,7 +95,6 @@ macro_rules! method {
 /// ```
 fn read_rows_doctest() {}
 method!(ReadRows, ReadRowsRequest, true);
-
 
 /// ### `SampleRowKeys`
 ///

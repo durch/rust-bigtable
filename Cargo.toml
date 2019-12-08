@@ -15,8 +15,8 @@ path = "src/lib.rs"
 
 [dependencies]
 protobuf = "1.0.24"
-smpl_jwt = "0.2"
-goauth = "0.2"
+smpl_jwt = "0.4"
+goauth = "0.6"
 log = "0.3"
 curl = "0.4"
 serde = "0.9"

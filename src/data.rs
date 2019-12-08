@@ -3,7 +3,7 @@
 
 // https://github.com/Manishearth/rust-clippy/issues/702
 #![allow(unknown_lints)]
-#![allow(clippy)]
+#![allow(clippy::all)]
 
 #![cfg_attr(rustfmt, rustfmt_skip)]
 
@@ -185,8 +185,8 @@ impl ::protobuf::Message for Row {
         ::std::any::TypeId::of::<Row>()
     }
 
-    fn as_any(&self) -> &::std::any::Any {
-        self as &::std::any::Any
+    fn as_any(&self) -> &dyn (::std::any::Any) {
+        self as &dyn (::std::any::Any)
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -413,8 +413,8 @@ impl ::protobuf::Message for Family {
         ::std::any::TypeId::of::<Family>()
     }
 
-    fn as_any(&self) -> &::std::any::Any {
-        self as &::std::any::Any
+    fn as_any(&self) -> &dyn (::std::any::Any) {
+        self as &dyn (::std::any::Any)
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -641,8 +641,8 @@ impl ::protobuf::Message for Column {
         ::std::any::TypeId::of::<Column>()
     }
 
-    fn as_any(&self) -> &::std::any::Any {
-        self as &::std::any::Any
+    fn as_any(&self) -> &dyn (::std::any::Any) {
+        self as &dyn (::std::any::Any)
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -900,8 +900,8 @@ impl ::protobuf::Message for Cell {
         ::std::any::TypeId::of::<Cell>()
     }
 
-    fn as_any(&self) -> &::std::any::Any {
-        self as &::std::any::Any
+    fn as_any(&self) -> &dyn (::std::any::Any) {
+        self as &dyn (::std::any::Any)
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -1329,8 +1329,8 @@ impl ::protobuf::Message for RowRange {
         ::std::any::TypeId::of::<RowRange>()
     }
 
-    fn as_any(&self) -> &::std::any::Any {
-        self as &::std::any::Any
+    fn as_any(&self) -> &dyn (::std::any::Any) {
+        self as &dyn (::std::any::Any)
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -1559,8 +1559,8 @@ impl ::protobuf::Message for RowSet {
         ::std::any::TypeId::of::<RowSet>()
     }
 
-    fn as_any(&self) -> &::std::any::Any {
-        self as &::std::any::Any
+    fn as_any(&self) -> &dyn (::std::any::Any) {
+        self as &dyn (::std::any::Any)
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -2028,8 +2028,8 @@ impl ::protobuf::Message for ColumnRange {
         ::std::any::TypeId::of::<ColumnRange>()
     }
 
-    fn as_any(&self) -> &::std::any::Any {
-        self as &::std::any::Any
+    fn as_any(&self) -> &dyn (::std::any::Any) {
+        self as &dyn (::std::any::Any)
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -2258,8 +2258,8 @@ impl ::protobuf::Message for TimestampRange {
         ::std::any::TypeId::of::<TimestampRange>()
     }
 
-    fn as_any(&self) -> &::std::any::Any {
-        self as &::std::any::Any
+    fn as_any(&self) -> &dyn (::std::any::Any) {
+        self as &dyn (::std::any::Any)
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -2681,8 +2681,8 @@ impl ::protobuf::Message for ValueRange {
         ::std::any::TypeId::of::<ValueRange>()
     }
 
-    fn as_any(&self) -> &::std::any::Any {
-        self as &::std::any::Any
+    fn as_any(&self) -> &dyn (::std::any::Any) {
+        self as &dyn (::std::any::Any)
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -3865,8 +3865,8 @@ impl ::protobuf::Message for RowFilter {
         ::std::any::TypeId::of::<RowFilter>()
     }
 
-    fn as_any(&self) -> &::std::any::Any {
-        self as &::std::any::Any
+    fn as_any(&self) -> &dyn (::std::any::Any) {
+        self as &dyn (::std::any::Any)
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -4148,8 +4148,8 @@ impl ::protobuf::Message for RowFilter_Chain {
         ::std::any::TypeId::of::<RowFilter_Chain>()
     }
 
-    fn as_any(&self) -> &::std::any::Any {
-        self as &::std::any::Any
+    fn as_any(&self) -> &dyn (::std::any::Any) {
+        self as &dyn (::std::any::Any)
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -4322,8 +4322,8 @@ impl ::protobuf::Message for RowFilter_Interleave {
         ::std::any::TypeId::of::<RowFilter_Interleave>()
     }
 
-    fn as_any(&self) -> &::std::any::Any {
-        self as &::std::any::Any
+    fn as_any(&self) -> &dyn (::std::any::Any) {
+        self as &dyn (::std::any::Any)
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -4598,8 +4598,8 @@ impl ::protobuf::Message for RowFilter_Condition {
         ::std::any::TypeId::of::<RowFilter_Condition>()
     }
 
-    fn as_any(&self) -> &::std::any::Any {
-        self as &::std::any::Any
+    fn as_any(&self) -> &dyn (::std::any::Any) {
+        self as &dyn (::std::any::Any)
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -5026,8 +5026,8 @@ impl ::protobuf::Message for Mutation {
         ::std::any::TypeId::of::<Mutation>()
     }
 
-    fn as_any(&self) -> &::std::any::Any {
-        self as &::std::any::Any
+    fn as_any(&self) -> &dyn (::std::any::Any) {
+        self as &dyn (::std::any::Any)
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -5355,8 +5355,8 @@ impl ::protobuf::Message for Mutation_SetCell {
         ::std::any::TypeId::of::<Mutation_SetCell>()
     }
 
-    fn as_any(&self) -> &::std::any::Any {
-        self as &::std::any::Any
+    fn as_any(&self) -> &dyn (::std::any::Any) {
+        self as &dyn (::std::any::Any)
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -5653,8 +5653,8 @@ impl ::protobuf::Message for Mutation_DeleteFromColumn {
         ::std::any::TypeId::of::<Mutation_DeleteFromColumn>()
     }
 
-    fn as_any(&self) -> &::std::any::Any {
-        self as &::std::any::Any
+    fn as_any(&self) -> &dyn (::std::any::Any) {
+        self as &dyn (::std::any::Any)
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -5850,8 +5850,8 @@ impl ::protobuf::Message for Mutation_DeleteFromFamily {
         ::std::any::TypeId::of::<Mutation_DeleteFromFamily>()
     }
 
-    fn as_any(&self) -> &::std::any::Any {
-        self as &::std::any::Any
+    fn as_any(&self) -> &dyn (::std::any::Any) {
+        self as &dyn (::std::any::Any)
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -5985,8 +5985,8 @@ impl ::protobuf::Message for Mutation_DeleteFromRow {
         ::std::any::TypeId::of::<Mutation_DeleteFromRow>()
     }
 
-    fn as_any(&self) -> &::std::any::Any {
-        self as &::std::any::Any
+    fn as_any(&self) -> &dyn (::std::any::Any) {
+        self as &dyn (::std::any::Any)
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
@@ -6324,8 +6324,8 @@ impl ::protobuf::Message for ReadModifyWriteRule {
         ::std::any::TypeId::of::<ReadModifyWriteRule>()
     }
 
-    fn as_any(&self) -> &::std::any::Any {
-        self as &::std::any::Any
+    fn as_any(&self) -> &dyn (::std::any::Any) {
+        self as &dyn (::std::any::Any)
     }
 
     fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
