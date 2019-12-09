@@ -1,13 +1,13 @@
-use bigtable::MutateRowsRequest_Entry;
-use data::{Mutation, Mutation_SetCell, ReadModifyWriteRule};
-use error::BTErr;
+use crate::protos::bigtable::MutateRowsRequest_Entry;
+use crate::protos::data::{Mutation, Mutation_SetCell, ReadModifyWriteRule};
+use crate::error::BTErr;
 use goauth::auth::Token;
-use method::{BigTable, MutateRows, ReadModifyWriteRow, ReadRows, SampleRowKeys};
+use crate::method::{BigTable, MutateRows, ReadModifyWriteRow, ReadRows, SampleRowKeys};
 use protobuf::RepeatedField;
-use request::BTRequest;
+use crate::request::BTRequest;
 use serde_json;
-use support::Table;
-use utils::*;
+use crate::support::Table;
+use crate::utils::*;
 
 pub fn get_row_prefix(prefix: Option<&str>) -> String {
     match prefix {

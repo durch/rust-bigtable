@@ -21,9 +21,4 @@ pub mod support;
 pub mod utils;
 pub mod wraps;
 
-// Generated mods
-pub mod bigtable;
-pub mod data;
-pub mod status;
-pub mod any;
-pub mod wrappers;
+pub mod protos;

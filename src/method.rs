@@ -1,4 +1,4 @@
-use bigtable::*;
+use crate::protos::bigtable::*;
 use protobuf::Message;
 
 pub trait BigTable {
@@ -74,7 +74,7 @@ macro_rules! method {
 /// extern crate serde_json;
 ///
 /// use bt::request::BTRequest;
-/// use bt::data::ReadModifyWriteRule;
+/// use bt::protos::data::ReadModifyWriteRule;
 /// use bt::utils::*;
 /// use bt::method::{BigTable, ReadRows};
 /// # use bt::error::BTErr;
@@ -104,7 +104,7 @@ method!(ReadRows, ReadRowsRequest, true);
 /// extern crate serde_json;
 ///
 /// use bt::request::BTRequest;
-/// use bt::data::ReadModifyWriteRule;
+/// use bt::protos::data::ReadModifyWriteRule;
 /// use bt::utils::*;
 /// use bt::method::{BigTable, SampleRowKeys};
 /// # use bt::error::BTErr;
@@ -139,7 +139,7 @@ method!(SampleRowKeys, SampleRowKeysRequest, false);
 /// use bt::request::BTRequest;
 /// use bt::utils::*;
 /// use bt::method::{BigTable, MutateRow};
-/// use bt::data::{Mutation, Mutation_DeleteFromRow};
+/// use bt::protos::data::{Mutation, Mutation_DeleteFromRow};
 /// # use bt::error::BTErr;
 ///
 /// fn main() {
@@ -183,8 +183,8 @@ method!(MutateRow, MutateRowRequest, true);
 /// use bt::request::BTRequest;
 /// use bt::utils::*;
 /// use bt::method::{BigTable, MutateRows};
-/// use bt::data::{Mutation, Mutation_DeleteFromRow};
-/// use bt::bigtable::MutateRowsRequest_Entry;
+/// use bt::protos::data::{Mutation, Mutation_DeleteFromRow};
+/// use bt::protos::bigtable::MutateRowsRequest_Entry;
 /// # use bt::error::BTErr;
 ///
 /// fn main() {
@@ -234,8 +234,8 @@ method!(MutateRows, MutateRowsRequest, true);
 /// use bt::request::BTRequest;
 /// use bt::utils::*;
 /// use bt::method::{BigTable, CheckAndMutateRow};
-/// use bt::data::{RowFilter, Mutation_DeleteFromRow, Mutation};
-/// use bt::bigtable::MutateRowsRequest_Entry;
+/// use bt::protos::data::{RowFilter, Mutation_DeleteFromRow, Mutation};
+/// use bt::protos::bigtable::MutateRowsRequest_Entry;
 /// # use bt::error::BTErr;
 ///
 /// fn main() {
@@ -281,7 +281,7 @@ method!(CheckAndMutateRow, CheckAndMutateRowRequest, true);
 /// use protobuf::RepeatedField;
 ///
 /// use bt::request::BTRequest;
-/// use bt::data::ReadModifyWriteRule;
+/// use bt::protos::data::ReadModifyWriteRule;
 /// use bt::utils::*;
 /// use bt::method::{BigTable, ReadModifyWriteRow};
 /// # use bt::error::BTErr;

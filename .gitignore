@@ -2,3 +2,4 @@ target
 Cargo.lock
 /pk.pem
 .idea*
+src/protos

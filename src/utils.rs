@@ -1,5 +1,4 @@
 use rustc_serialize::base64::{ToBase64, STANDARD};
-
 use goauth::auth::{JwtClaims, Token};
 use goauth::credentials::Credentials;
 use goauth::get_token_with_creds;
@@ -7,7 +6,7 @@ use goauth::scopes::Scope;
 use smpl_jwt::Jwt;
 use std::str::FromStr;
 
-use error::BTErr;
+use crate::error::BTErr;
 
 pub fn encode_str(str: &str) -> Vec<u8> {
     let mut v = Vec::new();
