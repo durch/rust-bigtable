@@ -2,7 +2,7 @@
 #![allow(dead_code)]
 
 extern crate goauth;
-extern crate protobuf_json;
+extern crate protobuf_json_temp;
 extern crate smpl_jwt;
 #[macro_use]
 extern crate log;

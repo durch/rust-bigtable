@@ -2,7 +2,7 @@ use curl::easy::{Easy, List};
 use crate::error::BTErr;
 use goauth::auth::Token;
 use crate::method::{BigTable, ReadRows};
-use protobuf_json;
+use protobuf_json_temp as protobuf_json;
 use serde_json;
 use serde_json::Value;
 use std;
