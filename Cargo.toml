@@ -25,7 +25,7 @@ serde = "1.0.103"
 serde_derive = "1.0.103"
 serde_json = "1.0.44"
 rustc-serialize = "0.3.24"
-protobuf-json = {git = "https://github.com/mrjones/rust-protobuf-json"}
+protobuf-json = {git = "https://github.com/mrjones/rust-protobuf-json", branch = "master"}
 
 [build-dependencies]
 protobuf-codegen-pure = "2.8.1"
