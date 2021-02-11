@@ -2,6 +2,7 @@
 [![](http://meritbadge.herokuapp.com/bigtable)](https://crates.io/crates/bigtable)
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/durch/rust-bigtable/blob/master/LICENSE.md)
 [![Join the chat at https://gitter.im/durch/rust-bigtable](https://badges.gitter.im/durch/rust-bigtable.svg)](https://gitter.im/durch/rust-bigtable?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Mentioned in Awesome Bigtable](https://awesome.re/mentioned-badge-flat.svg)](https://github.com/zrosenbauer/awesome-bigtable)
 
 ## rust-bigtable [[docs](https://durch.github.io/rust-bigtable/)]
 
