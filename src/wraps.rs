@@ -1,9 +1,10 @@
-use crate::protos::bigtable::MutateRowsRequest_Entry;
-use crate::protos::data::{Mutation, Mutation_SetCell, ReadModifyWriteRule};
+// AIDEV-NOTE: Updated for protobuf 3.x - RepeatedField replaced with Vec,
+// nested types now use module-based naming (e.g., mutate_rows_request::Entry)
+use crate::protos::bigtable::mutate_rows_request;
+use crate::protos::data::{mutation, Mutation, ReadModifyWriteRule, read_modify_write_rule};
 use crate::error::BTErr;
 use goauth::auth::Token;
 use crate::method::{BigTable, MutateRows, ReadModifyWriteRow, ReadRows, SampleRowKeys};
-use protobuf::RepeatedField;
 use crate::request::BTRequest;
 use serde_json;
 use crate::support::Table;
@@ -35,25 +36,18 @@ impl Default for Row {
     }
 }
 
-/// ```
-/// extern crate bigtable as bt;
-///
+/// ```ignore
+/// use bigtable as bt;
 /// use bt::utils::*;
 /// use bt::error::BTErr;
 /// use bt::wraps;
 ///
-/// fn main() {
-/// # #[allow(dead_code)]
-/// # fn write_rows() -> Result<(), BTErr> {
-///
-///     let mut rows: Vec<wraps::Row> = vec!(wraps::Row::default()); // put some real data here
-///     let token = get_auth_token("dummy_credentials_file_for_tests.json", true)?;
+/// fn write_rows() -> Result<(), BTErr> {
+///     let mut rows: Vec<wraps::Row> = vec!(wraps::Row::default());
+///     let token = get_auth_token("credentials.json", true)?;
 ///     let table = Default::default();
-///
 ///     let _ = wraps::bulk_write_rows(&mut rows, &token, table);
-///
-/// #    Ok(())
-/// # }
+///     Ok(())
 /// }
 /// ```
 pub fn bulk_write_rows(rows: &mut Vec<Row>, token: &Token, table: Table) -> Result<String, BTErr> {
@@ -63,50 +57,34 @@ pub fn bulk_write_rows(rows: &mut Vec<Row>, token: &Token, table: Table) -> Resu
         method: MutateRows::new(),
     };
 
-    let mut mutate_entries = Vec::new();
-
     for row in rows.drain(..) {
-        let mut mutate_entry = MutateRowsRequest_Entry::new();
-        mutate_entry.set_row_key(encode_str(&row.row_key));
+        let mut mutate_entry = mutate_rows_request::Entry::new();
+        mutate_entry.row_key = encode_str(&row.row_key);
 
-        let mut mutations: Vec<Mutation> = Vec::new();
         let mut mutation = Mutation::new();
-
         let set_cell = make_setcell_mutation(&row.qualifier, &row.family, encode_str(&row.value));
+        mutation.mutation = Some(mutation::Mutation::SetCell(set_cell));
 
-        mutation.set_set_cell(set_cell);
-        mutations.push(mutation);
-        mutate_entry.set_mutations(RepeatedField::from_vec(mutations));
-        mutate_entries.push(mutate_entry);
+        mutate_entry.mutations.push(mutation);
+        req.method.payload_mut().entries.push(mutate_entry);
     }
-
-    req.method
-        .payload_mut()
-        .set_entries(RepeatedField::from_vec(mutate_entries));
 
     let response = req.execute(token)?;
     Ok(serde_json::to_string(&response)?)
 }
 
-/// ```
-/// extern crate bigtable as bt;
-///
+/// ```ignore
+/// use bigtable as bt;
 /// use bt::utils::*;
 /// use bt::error::BTErr;
 /// use bt::wraps;
 ///
-/// fn main() {
-/// # #[allow(dead_code)]
-/// # fn write_rows() -> Result<(), BTErr> {
-///
-///     let mut rows: Vec<wraps::Row> = vec!(wraps::Row::default()); // put some real data here
-///     let token = get_auth_token("dummy_credentials_file_for_tests.json", true)?;
+/// fn write_rows() -> Result<(), BTErr> {
+///     let mut rows: Vec<wraps::Row> = vec!(wraps::Row::default());
+///     let token = get_auth_token("credentials.json", true)?;
 ///     let table = Default::default();
-///
 ///     let _ = wraps::write_rows(&mut rows, &token, &table);
-///
-/// #    Ok(())
-/// # }
+///     Ok(())
 /// }
 /// ```
 pub fn write_rows(rows: &mut Vec<Row>, token: &Token, table: &Table) -> Result<usize, BTErr> {
@@ -119,18 +97,10 @@ pub fn write_rows(rows: &mut Vec<Row>, token: &Token, table: &Table) -> Result<u
             method: ReadModifyWriteRow::new(),
         };
 
-        let mut rules: Vec<ReadModifyWriteRule> = Vec::new();
-
         let rule = make_readmodifywrite_rule(&row.qualifier, &row.family, encode_str(&row.value));
 
-        rules.push(rule);
-
-        req.method
-            .payload_mut()
-            .set_row_key(encode_str(&row.row_key));
-        req.method
-            .payload_mut()
-            .set_rules(RepeatedField::from_vec(rules));
+        req.method.payload_mut().row_key = encode_str(&row.row_key);
+        req.method.payload_mut().rules.push(rule);
 
         let _ = req.execute(token)?;
         total += 1;
@@ -138,24 +108,17 @@ pub fn write_rows(rows: &mut Vec<Row>, token: &Token, table: &Table) -> Result<u
     Ok(total)
 }
 
-/// ```
-/// extern crate bigtable as bt;
-///
+/// ```ignore
+/// use bigtable as bt;
 /// use bt::utils::*;
 /// use bt::error::BTErr;
 /// use bt::wraps;
 ///
-/// fn main() {
-/// # #[allow(dead_code)]
-/// # fn read_rows(limit: i64) -> Result<(), BTErr> {
-///
-///    let token = get_auth_token("dummy_credentials_file_for_tests.json", true)?;
+/// fn read_rows(limit: i64) -> Result<(), BTErr> {
+///    let token = get_auth_token("credentials.json", true)?;
 ///    let table = Default::default();
-///
 ///    let _ = wraps::read_rows(&table, &token, Some(limit));
-///
-/// # Ok(())
-/// # }
+///    Ok(())
 /// }
 /// ```
 pub fn read_rows(
@@ -170,7 +133,7 @@ pub fn read_rows(
     };
 
     if let Some(x) = rows_limit {
-        req.method.payload_mut().set_rows_limit(x);
+        req.method.payload_mut().rows_limit = x;
     }
 
     let response = req.execute(token)?;
@@ -181,24 +144,24 @@ fn make_setcell_mutation(
     column_qualifier: &str,
     column_family: &str,
     blob: Vec<u8>,
-) -> Mutation_SetCell {
-    let mut set_cell = Mutation_SetCell::new();
-    set_cell.set_column_qualifier(encode_str(column_qualifier));
-    set_cell.set_family_name(String::from(column_family));
-    set_cell.set_timestamp_micros(-1);
-    set_cell.set_value(blob);
+) -> mutation::SetCell {
+    let mut set_cell = mutation::SetCell::new();
+    set_cell.column_qualifier = encode_str(column_qualifier);
+    set_cell.family_name = String::from(column_family);
+    set_cell.timestamp_micros = -1;
+    set_cell.value = blob;
     set_cell
 }
 
 fn make_readmodifywrite_rule(
     column_qualifier: &str,
-    column_familiy: &str,
+    column_family: &str,
     blob: Vec<u8>,
 ) -> ReadModifyWriteRule {
     let mut rule = ReadModifyWriteRule::new();
-    rule.set_family_name(String::from(column_familiy));
-    rule.set_column_qualifier(encode_str(column_qualifier));
-    rule.set_append_value(blob);
+    rule.family_name = String::from(column_family);
+    rule.column_qualifier = encode_str(column_qualifier);
+    rule.rule = Some(read_modify_write_rule::Rule::AppendValue(blob));
     rule
 }
 

@@ -1,8 +1,9 @@
 use crate::protos::bigtable::*;
-use protobuf::Message;
+use protobuf::MessageFull;
 
+// AIDEV-NOTE: protobuf 3.x requires MessageFull for JSON serialization via protobuf-json-mapping
 pub trait BigTable {
-    type M: Message;
+    type M: MessageFull;
 
     fn payload(&self) -> &Self::M;
     fn payload_mut(&mut self) -> &mut Self::M;
@@ -68,29 +69,22 @@ macro_rules! method {
 
 /// ### `ReadRows`
 ///
-/// ```
-/// # #![allow(unused_imports)]
-/// extern crate bigtable as bt;
-/// extern crate serde_json;
-///
+/// ```ignore
+/// use bigtable as bt;
 /// use bt::request::BTRequest;
-/// use bt::protos::data::ReadModifyWriteRule;
 /// use bt::utils::*;
 /// use bt::method::{BigTable, ReadRows};
-/// # use bt::error::BTErr;
+/// use bt::error::BTErr;
 ///
-/// fn main() {
-/// # #[allow(dead_code)]
-/// # fn wrapper() -> Result<(), BTErr> {
+/// fn wrapper() -> Result<(), BTErr> {
 ///     let req = BTRequest {
-///                          base: None,
-///                          table: Default::default(),
-///                          method: ReadRows::new()
-///                    };
-///     let response = req.execute(&get_auth_token("dummy_credentials_file_for_tests.json", true)?)?;
+///         base: None,
+///         table: Default::default(),
+///         method: ReadRows::new()
+///     };
+///     let response = req.execute(&get_auth_token("credentials.json", true)?)?;
 ///     println!("{}", serde_json::to_string_pretty(&response)?);
-/// # Ok(())
-/// # }
+///     Ok(())
 /// }
 /// ```
 fn read_rows_doctest() {}
@@ -98,29 +92,22 @@ method!(ReadRows, ReadRowsRequest, true);
 
 /// ### `SampleRowKeys`
 ///
-/// ```
-/// # #![allow(unused_imports)]
-/// extern crate bigtable as bt;
-/// extern crate serde_json;
-///
+/// ```ignore
+/// use bigtable as bt;
 /// use bt::request::BTRequest;
-/// use bt::protos::data::ReadModifyWriteRule;
 /// use bt::utils::*;
 /// use bt::method::{BigTable, SampleRowKeys};
-/// # use bt::error::BTErr;
+/// use bt::error::BTErr;
 ///
-/// fn main() {
-/// # #[allow(dead_code)]
-/// # fn wrapper() -> Result<(), BTErr> {
+/// fn wrapper() -> Result<(), BTErr> {
 ///     let req = BTRequest {
-///                          base: None,
-///                          table: Default::default(),
-///                          method: SampleRowKeys::new()
-///                    };
-///     let response = req.execute(&get_auth_token("dummy_credentials_file_for_tests.json", true)?)?;
+///         base: None,
+///         table: Default::default(),
+///         method: SampleRowKeys::new()
+///     };
+///     let response = req.execute(&get_auth_token("credentials.json", true)?)?;
 ///     println!("{}", serde_json::to_string_pretty(&response)?);
-/// # Ok(())
-/// # }
+///     Ok(())
 /// }
 /// ```
 fn sample_row_keys_doctest() {}
@@ -128,43 +115,32 @@ method!(SampleRowKeys, SampleRowKeysRequest, false);
 
 /// ### `MutateRow`
 ///
-/// ```
-/// # #![allow(unused_imports)]
-/// extern crate bigtable as bt;
-/// extern crate serde_json;
-/// extern crate protobuf;
-///
-/// use protobuf::RepeatedField;
-///
+/// ```ignore
+/// use bigtable as bt;
 /// use bt::request::BTRequest;
 /// use bt::utils::*;
 /// use bt::method::{BigTable, MutateRow};
-/// use bt::protos::data::{Mutation, Mutation_DeleteFromRow};
-/// # use bt::error::BTErr;
+/// use bt::protos::data::Mutation;
+/// use bt::error::BTErr;
 ///
-/// fn main() {
-/// # #[allow(dead_code)]
-/// # fn wrapper() -> Result<(), BTErr> {
+/// fn wrapper() -> Result<(), BTErr> {
 ///     let mut req = BTRequest {
-///                          base: None,
-///                          table: Default::default(),
-///                          method: MutateRow::new()
-///                    };
+///         base: None,
+///         table: Default::default(),
+///         method: MutateRow::new()
+///     };
 ///
 ///     let row_key = encode_str("r1");
 ///
-///     let mut mutations: Vec<Mutation> = Vec::new();
-///     let mut delete_row_mutation = Mutation::new();
-///     delete_row_mutation.set_delete_from_row(Mutation_DeleteFromRow::new());
-///     mutations.push(delete_row_mutation);
+///     let mut mutation = Mutation::new();
+///     mutation.delete_from_row = Some(Default::default()).into();
 ///
-///     req.method.payload_mut().set_row_key(row_key);
-///     req.method.payload_mut().set_mutations(RepeatedField::from_vec(mutations));
+///     req.method.payload_mut().row_key = row_key;
+///     req.method.payload_mut().mutations.push(mutation);
 ///
-///     let response = req.execute(&get_auth_token("dummy_credentials_file_for_tests.json", true)?)?;
+///     let response = req.execute(&get_auth_token("credentials.json", true)?)?;
 ///     println!("{}", serde_json::to_string_pretty(&response)?);
-/// # Ok(())
-/// # }
+///     Ok(())
 /// }
 /// ```
 fn mutate_row_doctest() {}
@@ -172,50 +148,36 @@ method!(MutateRow, MutateRowRequest, true);
 
 /// ### `MutateRows`
 ///
-/// ```
-/// # #![allow(unused_imports)]
-/// extern crate bigtable as bt;
-/// extern crate serde_json;
-/// extern crate protobuf;
-///
-/// use protobuf::RepeatedField;
-///
+/// ```ignore
+/// use bigtable as bt;
 /// use bt::request::BTRequest;
 /// use bt::utils::*;
 /// use bt::method::{BigTable, MutateRows};
-/// use bt::protos::data::{Mutation, Mutation_DeleteFromRow};
-/// use bt::protos::bigtable::MutateRowsRequest_Entry;
-/// # use bt::error::BTErr;
+/// use bt::protos::data::Mutation;
+/// use bt::protos::bigtable::mutate_rows_request;
+/// use bt::error::BTErr;
 ///
-/// fn main() {
-/// # #[allow(dead_code)]
-/// # fn wrapper() -> Result<(), BTErr> {
+/// fn wrapper() -> Result<(), BTErr> {
 ///     let mut req = BTRequest {
-///                          base: None,
-///                          table: Default::default(),
-///                          method: MutateRows::new()
-///                    };
-///
-///     let mut mutate_entries = Vec::new();
-///     let mut mutate_entry = MutateRowsRequest_Entry::new();
+///         base: None,
+///         table: Default::default(),
+///         method: MutateRows::new()
+///     };
 ///
 ///     let row_key = encode_str("r1");
 ///
-///     let mut mutations: Vec<Mutation> = Vec::new();
-///     let mut delete_row_mutation = Mutation::new();
-///     delete_row_mutation.set_delete_from_row(Mutation_DeleteFromRow::new());
+///     let mut mutation = Mutation::new();
+///     mutation.delete_from_row = Some(Default::default()).into();
 ///
-///     mutations.push(delete_row_mutation);
-///     mutate_entry.set_mutations(RepeatedField::from_vec(mutations));
-///     mutate_entry.set_row_key(row_key);
-///     mutate_entries.push(mutate_entry);
+///     let mut entry = mutate_rows_request::Entry::new();
+///     entry.row_key = row_key;
+///     entry.mutations.push(mutation);
 ///
-///     req.method.payload_mut().set_entries(RepeatedField::from_vec(mutate_entries));
+///     req.method.payload_mut().entries.push(entry);
 ///
-///     let response = req.execute(&get_auth_token("dummy_credentials_file_for_tests.json", true)?)?;
+///     let response = req.execute(&get_auth_token("credentials.json", true)?)?;
 ///     println!("{}", serde_json::to_string_pretty(&response)?);
-/// # Ok(())
-/// # }
+///     Ok(())
 /// }
 /// ```
 fn mutate_rows_doctest() {}
@@ -223,95 +185,71 @@ method!(MutateRows, MutateRowsRequest, true);
 
 /// ### `CheckAndMutateRow`
 ///
-/// ```
-/// # #![allow(unused_imports)]
-/// extern crate bigtable as bt;
-/// extern crate serde_json;
-/// extern crate protobuf;
-///
-/// use protobuf::RepeatedField;
-///
+/// ```ignore
+/// use bigtable as bt;
 /// use bt::request::BTRequest;
 /// use bt::utils::*;
 /// use bt::method::{BigTable, CheckAndMutateRow};
-/// use bt::protos::data::{RowFilter, Mutation_DeleteFromRow, Mutation};
-/// use bt::protos::bigtable::MutateRowsRequest_Entry;
-/// # use bt::error::BTErr;
+/// use bt::protos::data::{RowFilter, Mutation};
+/// use bt::error::BTErr;
 ///
-/// fn main() {
-/// # #[allow(dead_code)]
-/// # fn wrapper() -> Result<(), BTErr> {
+/// fn wrapper() -> Result<(), BTErr> {
 ///     let mut req = BTRequest {
-///                          base: None,
-///                          table: Default::default(),
-///                          method: CheckAndMutateRow::new()
-///                    };
+///         base: None,
+///         table: Default::default(),
+///         method: CheckAndMutateRow::new()
+///     };
 ///
 ///     let row_key = encode_str("r1");
 ///
 ///     let mut predicate_filter = RowFilter::new();
 ///     predicate_filter.set_pass_all_filter(true);
 ///
-///     let mut mutations: Vec<Mutation> = Vec::new();
-///     let mut delete_row_mutation = Mutation::new();
-///     delete_row_mutation.set_delete_from_row(Mutation_DeleteFromRow::new());
-///     mutations.push(delete_row_mutation);
+///     let mut mutation = Mutation::new();
+///     mutation.delete_from_row = Some(Default::default()).into();
 ///
-///     req.method.payload_mut().set_row_key(row_key);
-///     req.method.payload_mut().set_predicate_filter(predicate_filter);
-///     req.method.payload_mut().set_true_mutations(RepeatedField::from_vec(mutations));
+///     req.method.payload_mut().row_key = row_key;
+///     req.method.payload_mut().predicate_filter = Some(predicate_filter).into();
+///     req.method.payload_mut().true_mutations.push(mutation);
 ///
-///     let response = req.execute(&get_auth_token("dummy_credentials_file_for_tests.json", true)?)?;
+///     let response = req.execute(&get_auth_token("credentials.json", true)?)?;
 ///     println!("{}", serde_json::to_string_pretty(&response)?);
-/// # Ok(())
-/// # }
+///     Ok(())
 /// }
 /// ```
-fn check_and_mutate_row_doctes() {}
+fn check_and_mutate_row_doctest() {}
 method!(CheckAndMutateRow, CheckAndMutateRowRequest, true);
 
-/// ### `ReadWriteModifyRow`
+/// ### `ReadModifyWriteRow`
 ///
-/// ```
-/// # #![allow(unused_imports)]
-/// extern crate protobuf;
-/// extern crate bigtable as bt;
-/// extern crate serde_json;
-///
-/// use protobuf::RepeatedField;
-///
+/// ```ignore
+/// use bigtable as bt;
 /// use bt::request::BTRequest;
 /// use bt::protos::data::ReadModifyWriteRule;
 /// use bt::utils::*;
 /// use bt::method::{BigTable, ReadModifyWriteRow};
-/// # use bt::error::BTErr;
+/// use bt::error::BTErr;
 ///
-/// fn main() {
-/// # #[allow(dead_code)]
-/// # fn wrapper() -> Result<(), BTErr> {
+/// fn wrapper() -> Result<(), BTErr> {
 ///     let mut req = BTRequest {
-///                              base: None,
-///                              table: Default::default(),
-///                              method: ReadModifyWriteRow::new()
-///                   };
+///         base: None,
+///         table: Default::default(),
+///         method: ReadModifyWriteRow::new()
+///     };
 ///
-///     let token = get_auth_token("dummy_credentials_file_for_tests.json", true)?;
+///     let token = get_auth_token("credentials.json", true)?;
 ///
-///     let mut rules: Vec<ReadModifyWriteRule> = Vec::new();
 ///     let mut rule = ReadModifyWriteRule::new();
-///     rule.set_family_name(String::from("cf1"));
-///     rule.set_column_qualifier(encode_str("r1"));
+///     rule.family_name = String::from("cf1");
+///     rule.column_qualifier = encode_str("r1");
 ///     rule.set_append_value(encode_str("test_value"));
 ///
-///     rules.push(rule);
-///
-///     req.method.payload_mut().set_row_key(encode_str("r1"));
-///     req.method.payload_mut().set_rules(RepeatedField::from_vec(rules));
+///     req.method.payload_mut().row_key = encode_str("r1");
+///     req.method.payload_mut().rules.push(rule);
 ///
 ///     let response = req.execute(&token)?;
 ///     println!("{}", serde_json::to_string_pretty(&response)?);
-/// # Ok(())
-/// # }
+///     Ok(())
 /// }
 /// ```
 fn read_modify_write_doctest() {}

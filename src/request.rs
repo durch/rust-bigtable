@@ -2,7 +2,7 @@ use curl::easy::{Easy, List};
 use crate::error::BTErr;
 use goauth::auth::Token;
 use crate::method::{BigTable, ReadRows};
-use protobuf_json_temp as protobuf_json;
+use protobuf_json_mapping;
 use serde_json;
 use serde_json::Value;
 use std;
@@ -45,8 +45,8 @@ impl<'a, T: BigTable> BTRequest<'a, T> {
         let mut response_data: Vec<u8> = Vec::new();
         let mut easy = Easy::new();
 
-        let payload = protobuf_json::proto_to_json(self.method.payload());
-        let s_payload = serde_json::to_string(&payload)?;
+        // AIDEV-NOTE: protobuf 3.x uses print_to_string for JSON serialization
+        let s_payload = protobuf_json_mapping::print_to_string(self.method.payload())?;
         let mut b_payload = s_payload.as_bytes();
 
         easy.url(&self.form_url()?)?;

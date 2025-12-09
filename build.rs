@@ -1,17 +1,15 @@
-extern crate protobuf_codegen_pure;
-
 fn main() {
-  protobuf_codegen_pure::run(protobuf_codegen_pure::Args {
-    out_dir: "src/protos",
-    input: &[
-      "protos/google/bigtable/v2/bigtable.proto",
-      "protos/google/bigtable/v2/data.proto",
-      "protos/google/rpc/status.proto"
-    ],
-    includes: &["protos"],
-    customize: protobuf_codegen_pure::Customize {
-      ..Default::default()
-    },
-  })
-  .expect("protoc");
+    protobuf_codegen::Codegen::new()
+        .pure()
+        .includes(["protos"])
+        .input("protos/google/api/annotations.proto")
+        .input("protos/google/api/client.proto")
+        .input("protos/google/api/field_behavior.proto")
+        .input("protos/google/api/http.proto")
+        .input("protos/google/api/resource.proto")
+        .input("protos/google/bigtable/v2/bigtable.proto")
+        .input("protos/google/bigtable/v2/data.proto")
+        .input("protos/google/rpc/status.proto")
+        .cargo_out_dir("protos")
+        .run_from_script();
 }
