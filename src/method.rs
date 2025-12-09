@@ -254,3 +254,129 @@ method!(CheckAndMutateRow, CheckAndMutateRowRequest, true);
 /// ```
 fn read_modify_write_doctest() {}
 method!(ReadModifyWriteRow, ReadModifyWriteRowRequest, true);
+
+// AIDEV-NOTE: New methods added in later Bigtable API versions
+
+/// ### `PingAndWarm`
+///
+/// Warms up connection channels to the service. Recommended to be called
+/// periodically to maintain connection readiness.
+///
+/// ```ignore
+/// use bigtable as bt;
+/// use bt::request::BTRequest;
+/// use bt::utils::*;
+/// use bt::method::{BigTable, PingAndWarm};
+/// use bt::error::BTErr;
+///
+/// fn wrapper() -> Result<(), BTErr> {
+///     let req = BTRequest {
+///         base: None,
+///         table: Default::default(),
+///         method: PingAndWarm::new()
+///     };
+///     let response = req.execute(&get_auth_token("credentials.json", true)?)?;
+///     Ok(())
+/// }
+/// ```
+fn ping_and_warm_doctest() {}
+method!(PingAndWarm, PingAndWarmRequest, true);
+
+/// ### `GenerateInitialChangeStreamPartitions`
+///
+/// Generates initial change stream partitions. Primarily for Apache Beam BigtableIO.
+///
+/// ```ignore
+/// use bigtable as bt;
+/// use bt::request::BTRequest;
+/// use bt::utils::*;
+/// use bt::method::{BigTable, GenerateInitialChangeStreamPartitions};
+/// use bt::error::BTErr;
+///
+/// fn wrapper() -> Result<(), BTErr> {
+///     let req = BTRequest {
+///         base: None,
+///         table: Default::default(),
+///         method: GenerateInitialChangeStreamPartitions::new()
+///     };
+///     let response = req.execute(&get_auth_token("credentials.json", true)?)?;
+///     Ok(())
+/// }
+/// ```
+fn generate_initial_change_stream_partitions_doctest() {}
+method!(GenerateInitialChangeStreamPartitions, GenerateInitialChangeStreamPartitionsRequest, true);
+
+/// ### `ReadChangeStream`
+///
+/// Reads changes from a table's change stream. Primarily for Apache Beam BigtableIO CDC.
+///
+/// ```ignore
+/// use bigtable as bt;
+/// use bt::request::BTRequest;
+/// use bt::utils::*;
+/// use bt::method::{BigTable, ReadChangeStream};
+/// use bt::error::BTErr;
+///
+/// fn wrapper() -> Result<(), BTErr> {
+///     let req = BTRequest {
+///         base: None,
+///         table: Default::default(),
+///         method: ReadChangeStream::new()
+///     };
+///     let response = req.execute(&get_auth_token("credentials.json", true)?)?;
+///     Ok(())
+/// }
+/// ```
+fn read_change_stream_doctest() {}
+method!(ReadChangeStream, ReadChangeStreamRequest, true);
+
+/// ### `PrepareQuery`
+///
+/// Prepares a GoogleSQL query for execution. Returns a prepared query that can
+/// be used with ExecuteQuery.
+///
+/// ```ignore
+/// use bigtable as bt;
+/// use bt::request::BTRequest;
+/// use bt::utils::*;
+/// use bt::method::{BigTable, PrepareQuery};
+/// use bt::error::BTErr;
+///
+/// fn wrapper() -> Result<(), BTErr> {
+///     let mut req = BTRequest {
+///         base: None,
+///         table: Default::default(),
+///         method: PrepareQuery::new()
+///     };
+///     req.method.payload_mut().query = String::from("SELECT * FROM my_table");
+///     let response = req.execute(&get_auth_token("credentials.json", true)?)?;
+///     Ok(())
+/// }
+/// ```
+fn prepare_query_doctest() {}
+method!(PrepareQuery, PrepareQueryRequest, true);
+
+/// ### `ExecuteQuery`
+///
+/// Executes a GoogleSQL query against a Bigtable table.
+///
+/// ```ignore
+/// use bigtable as bt;
+/// use bt::request::BTRequest;
+/// use bt::utils::*;
+/// use bt::method::{BigTable, ExecuteQuery};
+/// use bt::error::BTErr;
+///
+/// fn wrapper() -> Result<(), BTErr> {
+///     let mut req = BTRequest {
+///         base: None,
+///         table: Default::default(),
+///         method: ExecuteQuery::new()
+///     };
+///     req.method.payload_mut().query = String::from("SELECT * FROM my_table");
+///     let response = req.execute(&get_auth_token("credentials.json", true)?)?;
+///     Ok(())
+/// }
+/// ```
+fn execute_query_doctest() {}
+method!(ExecuteQuery, ExecuteQueryRequest, true);
