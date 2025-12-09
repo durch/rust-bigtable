@@ -2,6 +2,15 @@ use crate::protos::bigtable::*;
 use protobuf::MessageFull;
 
 // AIDEV-NOTE: protobuf 3.x requires MessageFull for JSON serialization via protobuf-json-mapping
+// AIDEV-NOTE: UrlScope distinguishes table-level vs instance-level API methods
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub enum UrlScope {
+    /// URL format: /projects/{project}/instances/{instance}/tables/{table}:{method}
+    Table,
+    /// URL format: /projects/{project}/instances/{instance}:{method}
+    Instance,
+}
+
 pub trait BigTable {
     type M: MessageFull;
 
@@ -10,14 +19,42 @@ pub trait BigTable {
     fn set_payload(&mut self, payload: Self::M);
     fn url_method(&self) -> &str;
     fn is_post(&self) -> bool;
+    /// Returns the URL scope for this method (default: Table)
+    fn url_scope(&self) -> UrlScope {
+        UrlScope::Table
+    }
 }
 
 macro_rules! method {
+    // Table-level method (default) - auto-generates URL suffix from name
     ($name: ident, $proto: ty, $post: expr) => {
+        method!(@impl $name, $proto, $post, UrlScope::Table, {
+            let mut x = stringify!($name).chars();
+            let first = x.next().unwrap().to_lowercase().next().unwrap();
+            let rest = x.as_str();
+            format!(":{}{}", first, rest)
+        });
+    };
+    // Method with explicit scope - auto-generates URL suffix from name
+    ($name: ident, $proto: ty, $post: expr, $scope: expr) => {
+        method!(@impl $name, $proto, $post, $scope, {
+            let mut x = stringify!($name).chars();
+            let first = x.next().unwrap().to_lowercase().next().unwrap();
+            let rest = x.as_str();
+            format!(":{}{}", first, rest)
+        });
+    };
+    // Method with explicit scope and custom URL suffix
+    ($name: ident, $proto: ty, $post: expr, $scope: expr, $url_suffix: expr) => {
+        method!(@impl $name, $proto, $post, $scope, { String::from($url_suffix) });
+    };
+    // Internal implementation
+    (@impl $name: ident, $proto: ty, $post: expr, $scope: expr, $url_method_expr: block) => {
         pub struct $name {
             pub payload: $proto,
             pub url_method: String,
             pub is_post: bool,
+            pub scope: UrlScope,
         }
 
         impl $name {
@@ -28,15 +65,11 @@ macro_rules! method {
 
         impl Default for $name {
             fn default() -> Self {
-                // URL suffix from ident
-                let mut x = stringify!($name).chars();
-                let first = x.next().unwrap().to_lowercase().next().unwrap();
-                let rest = x.as_str();
-
                 $name {
                     payload: Default::default(),
-                    url_method: format!(":{}{}", first, rest),
+                    url_method: $url_method_expr,
                     is_post: $post,
+                    scope: $scope,
                 }
             }
         }
@@ -62,6 +95,10 @@ macro_rules! method {
 
             fn is_post(&self) -> bool {
                 self.is_post
+            }
+
+            fn url_scope(&self) -> UrlScope {
+                self.scope
             }
         }
     };
@@ -280,7 +317,8 @@ method!(ReadModifyWriteRow, ReadModifyWriteRowRequest, true);
 /// }
 /// ```
 fn ping_and_warm_doctest() {}
-method!(PingAndWarm, PingAndWarmRequest, true);
+// AIDEV-NOTE: PingAndWarm uses instance-level URL with custom suffix ":ping"
+method!(PingAndWarm, PingAndWarmRequest, true, UrlScope::Instance, ":ping");
 
 /// ### `GenerateInitialChangeStreamPartitions`
 ///
@@ -354,7 +392,8 @@ method!(ReadChangeStream, ReadChangeStreamRequest, true);
 /// }
 /// ```
 fn prepare_query_doctest() {}
-method!(PrepareQuery, PrepareQueryRequest, true);
+// AIDEV-NOTE: PrepareQuery uses instance-level URL
+method!(PrepareQuery, PrepareQueryRequest, true, UrlScope::Instance);
 
 /// ### `ExecuteQuery`
 ///
@@ -379,4 +418,5 @@ method!(PrepareQuery, PrepareQueryRequest, true);
 /// }
 /// ```
 fn execute_query_doctest() {}
-method!(ExecuteQuery, ExecuteQueryRequest, true);
+// AIDEV-NOTE: ExecuteQuery uses instance-level URL
+method!(ExecuteQuery, ExecuteQueryRequest, true, UrlScope::Instance);

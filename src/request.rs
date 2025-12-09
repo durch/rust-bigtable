@@ -1,7 +1,7 @@
 use curl::easy::{Easy, List};
 use crate::error::BTErr;
 use goauth::auth::Token;
-use crate::method::{BigTable, ReadRows};
+use crate::method::{BigTable, ReadRows, UrlScope};
 use protobuf_json_mapping;
 use serde_json;
 use serde_json::Value;
@@ -26,19 +26,29 @@ impl<'a> Default for BTRequest<'a, ReadRows> {
 }
 
 impl<'a, T: BigTable> BTRequest<'a, T> {
+    // AIDEV-NOTE: form_url handles both table-level and instance-level API methods
     pub fn form_url(&self) -> Result<String, BTErr> {
         let base = match self.base {
             Some(x) => x,
             None => "https://bigtable.googleapis.com/v2",
         };
-        Ok(format!(
-            "{}/projects/{}/instances/{}/tables/{}{}",
-            base,
-            self.table.instance.project.name,
-            self.table.instance.name,
-            self.table.name,
-            self.method.url_method()
-        ))
+        match self.method.url_scope() {
+            UrlScope::Table => Ok(format!(
+                "{}/projects/{}/instances/{}/tables/{}{}",
+                base,
+                self.table.instance.project.name,
+                self.table.instance.name,
+                self.table.name,
+                self.method.url_method()
+            )),
+            UrlScope::Instance => Ok(format!(
+                "{}/projects/{}/instances/{}{}",
+                base,
+                self.table.instance.project.name,
+                self.table.instance.name,
+                self.method.url_method()
+            )),
+        }
     }
 
     pub fn execute(&self, token: &Token) -> Result<Value, BTErr> {
