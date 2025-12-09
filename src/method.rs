@@ -120,7 +120,7 @@ method!(SampleRowKeys, SampleRowKeysRequest, false);
 /// use bt::request::BTRequest;
 /// use bt::utils::*;
 /// use bt::method::{BigTable, MutateRow};
-/// use bt::protos::data::Mutation;
+/// use bt::protos::data::{Mutation, mutation};
 /// use bt::error::BTErr;
 ///
 /// fn wrapper() -> Result<(), BTErr> {
@@ -132,11 +132,11 @@ method!(SampleRowKeys, SampleRowKeysRequest, false);
 ///
 ///     let row_key = encode_str("r1");
 ///
-///     let mut mutation = Mutation::new();
-///     mutation.delete_from_row = Some(Default::default()).into();
+///     let mut m = Mutation::new();
+///     m.mutation = Some(mutation::Mutation::DeleteFromRow(Default::default()));
 ///
 ///     req.method.payload_mut().row_key = row_key;
-///     req.method.payload_mut().mutations.push(mutation);
+///     req.method.payload_mut().mutations.push(m);
 ///
 ///     let response = req.execute(&get_auth_token("credentials.json", true)?)?;
 ///     println!("{}", serde_json::to_string_pretty(&response)?);
@@ -153,7 +153,7 @@ method!(MutateRow, MutateRowRequest, true);
 /// use bt::request::BTRequest;
 /// use bt::utils::*;
 /// use bt::method::{BigTable, MutateRows};
-/// use bt::protos::data::Mutation;
+/// use bt::protos::data::{Mutation, mutation};
 /// use bt::protos::bigtable::mutate_rows_request;
 /// use bt::error::BTErr;
 ///
@@ -166,12 +166,12 @@ method!(MutateRow, MutateRowRequest, true);
 ///
 ///     let row_key = encode_str("r1");
 ///
-///     let mut mutation = Mutation::new();
-///     mutation.delete_from_row = Some(Default::default()).into();
+///     let mut m = Mutation::new();
+///     m.mutation = Some(mutation::Mutation::DeleteFromRow(Default::default()));
 ///
 ///     let mut entry = mutate_rows_request::Entry::new();
 ///     entry.row_key = row_key;
-///     entry.mutations.push(mutation);
+///     entry.mutations.push(m);
 ///
 ///     req.method.payload_mut().entries.push(entry);
 ///
@@ -190,7 +190,7 @@ method!(MutateRows, MutateRowsRequest, true);
 /// use bt::request::BTRequest;
 /// use bt::utils::*;
 /// use bt::method::{BigTable, CheckAndMutateRow};
-/// use bt::protos::data::{RowFilter, Mutation};
+/// use bt::protos::data::{RowFilter, Mutation, mutation, row_filter};
 /// use bt::error::BTErr;
 ///
 /// fn wrapper() -> Result<(), BTErr> {
@@ -203,14 +203,14 @@ method!(MutateRows, MutateRowsRequest, true);
 ///     let row_key = encode_str("r1");
 ///
 ///     let mut predicate_filter = RowFilter::new();
-///     predicate_filter.set_pass_all_filter(true);
+///     predicate_filter.filter = Some(row_filter::Filter::PassAllFilter(true));
 ///
-///     let mut mutation = Mutation::new();
-///     mutation.delete_from_row = Some(Default::default()).into();
+///     let mut m = Mutation::new();
+///     m.mutation = Some(mutation::Mutation::DeleteFromRow(Default::default()));
 ///
 ///     req.method.payload_mut().row_key = row_key;
 ///     req.method.payload_mut().predicate_filter = Some(predicate_filter).into();
-///     req.method.payload_mut().true_mutations.push(mutation);
+///     req.method.payload_mut().true_mutations.push(m);
 ///
 ///     let response = req.execute(&get_auth_token("credentials.json", true)?)?;
 ///     println!("{}", serde_json::to_string_pretty(&response)?);

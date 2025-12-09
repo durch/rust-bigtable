@@ -3,3 +3,7 @@ Cargo.lock
 /pk.pem
 .idea*
 src/protos
+
+# Credentials - never commit
+*.json
+!dummy_credentials_file_for_tests.json

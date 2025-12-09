@@ -52,6 +52,35 @@ cargo check
 
 ### Dependencies
 - `goauth` / `smpl_jwt`: Google OAuth2 / JWT authentication
-- `protobuf` / `protobuf-json-temp`: Protobuf message handling and JSON conversion
+- `protobuf` / `protobuf-json-mapping`: Protobuf message handling and JSON conversion
 - `curl`: HTTP client
 - `serde_json`: JSON serialization
+
+## Integration Testing
+
+### GCP Resources
+- **Project ID**: `gen-lang-client-0421059902`
+- **Instance**: `test-inst`
+- **Table**: `my-table`
+- **Column Family**: `cf1`
+
+### Setup Commands
+```bash
+# Create instance
+gcloud bigtable instances create test-inst \
+  --project=gen-lang-client-0421059902 \
+  --cluster=test-cluster \
+  --cluster-zone=us-central1-c \
+  --display-name="Test Instance"
+
+# Create table with column family
+cbt -project=gen-lang-client-0421059902 -instance=test-inst createtable my-table
+cbt -project=gen-lang-client-0421059902 -instance=test-inst createfamily my-table cf1
+```
+
+### Credentials
+Requires a service account JSON key with `roles/bigtable.user` permission.
+- **Credentials file**: `Rust Bigtable IAM Admin.json` (gitignored)
+- **Service account**: `rustbigtable@gen-lang-client-0421059902.iam.gserviceaccount.com`
+
+Usage: `get_auth_token("Rust Bigtable IAM Admin.json", true)`
