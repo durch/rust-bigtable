@@ -1,85 +1,138 @@
-[![](https://travis-ci.org/durch/rust-bigtable.svg?branch=master)](https://travis-ci.org/durch/rust-bigtable)
-[![](http://meritbadge.herokuapp.com/bigtable)](https://crates.io/crates/bigtable)
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/durch/rust-bigtable/blob/master/LICENSE.md)
-[![Join the chat at https://gitter.im/durch/rust-bigtable](https://badges.gitter.im/durch/rust-bigtable.svg)](https://gitter.im/durch/rust-bigtable?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Mentioned in Awesome Bigtable](https://awesome.re/mentioned-badge-flat.svg)](https://github.com/zrosenbauer/awesome-bigtable)
 
 ## rust-bigtable [[docs](https://durch.github.io/rust-bigtable/)]
 
 Rust library for working with [Google Bigtable](https://cloud.google.com/bigtable/docs/) [Data API](https://cloud.google.com/bigtable/docs/reference/data/rpc/google.bigtable.v2)
 
-### Intro
-Interface towards Cloud Bigtable, supports all [Data API](https://cloud.google.com/bigtable/docs/reference/data/rpc/google.bigtable.v2) methods. 
+### Supported API Methods
 
-+ CheckAndMutateRow
-+ MutateRow
-+ MutateRows
-+ ReadModifyWriteRow
-+ ReadRows
-+ SampleRowKeys
+Full coverage of the Bigtable Data API v2:
 
-Includes support for [JWT auth](https://cloud.google.com/docs/authentication):
+| Method | Description |
+|--------|-------------|
+| `ReadRows` | Streams back the contents of all requested rows |
+| `SampleRowKeys` | Returns a sample of row keys in the table |
+| `MutateRow` | Mutates a row atomically |
+| `MutateRows` | Mutates multiple rows in a batch |
+| `CheckAndMutateRow` | Mutates a row atomically based on output of a predicate filter |
+| `ReadModifyWriteRow` | Modifies a row atomically on the server |
+| `PingAndWarm` | Warms up connection channels to the service |
+| `GenerateInitialChangeStreamPartitions` | Generates initial change stream partitions |
+| `ReadChangeStream` | Reads changes from a table's change stream |
+| `PrepareQuery` | Prepares a GoogleSQL query for execution |
+| `ExecuteQuery` | Executes a GoogleSQL query against a Bigtable table |
 
-### How it works
+### How It Works
 
-Initial plans was to go full `grpc` over `http/2`, unfortunately Rust support is not there yet, so a middle way was taken :).
+Requests are `protobuf` messages generated from [Google's proto definitions](https://github.com/googleapis/googleapis/blob/master/google/bigtable/v2/bigtable.proto). These messages are converted to JSON and sent to the predefined REST endpoints. Responses are returned as `serde_json::Value`.
 
-Requests objects are `protobuf` messages, generated using `proto` definitions available from [Google](https://github.com/googleapis/googleapis/blob/master/google/bigtable/v2/bigtable.proto). And all configuration is done through very nice interfaces generated in this way. These messages are then transparently converted to `json`, and sent to predefined `google.api.http` endpoints, also defined [here](https://github.com/googleapis/googleapis/blob/master/google/bigtable/v2/bigtable.proto). Responses are returned as [serde_json::Value](https://docs.serde.rs/serde_json/value/index.html).
+Authentication is handled via [goauth](https://crates.io/crates/goauth) with JWT tokens.
 
-In theory this should enable easy upgrade to full `grpc` over `http/2` as soon as it becomes viable, the only remaining work would be utilising proper return types, also available as `protobuf` messages.
+### Installation
+
+```toml
+[dependencies]
+bigtable = "0.6"
+```
 
 ### Configuration
 
-You can provide the `json` service accounts credentials obtained from Google Cloud Console or the private key file in `pem` or (see [random_rsa_for_testing](https://github.com/durch/rust-bigtable/blob/master/random_rsa_for_tests) for proper format) format as well as Google Cloud service account with proper scopes (scopes are handled by [goauth](https://crates.io/crates/goauth), as part of authentication), 
+Provide service account credentials from Google Cloud Console as a JSON key file:
+
+```rust
+use bigtable::utils::get_auth_token;
+
+let token = get_auth_token("service-account-key.json", true)?;
+```
 
 ### Usage
 
-*In your Cargo.toml*
+#### High-Level Wrappers
 
-```
-[dependencies]
-bigtable = '0.3'
-```
-
-#### Higher level wrappers (`wraps`)
-
-There and higher wrappers available for reading and writing rows, so there is not need to craft `protobufs` manually. Write can also be used to update, but not very robustly yet, coming soon :).
-
-##### Read and Write
-
-Read wrappers allows for simple limit on the number of rows, it uses the `ReadRows` underlying method.
-
-There are two write strategies available, `bulk_write_rows` and `write_rows`. `bulk_write_rows` first collects all writes and fires only one request, underlying method is `MutateRows`, this results in a much higher write throughput. `write_rows` shoots one request per row to be written, underlying method is `ReadModifyWriteRow`. 
+Simple wrappers for common operations:
 
 ```rust
+use bigtable::utils::get_auth_token;
+use bigtable::wraps;
+use bigtable::support::Table;
 
-extern crate bigtable as bt;
+// Read rows with limit
+let token = get_auth_token("credentials.json", true)?;
+let table = Table::default();
+let rows = wraps::read_rows(&table, &token, Some(100))?;
 
-use bt::utils::*;
-use bt::wraps;
+// Bulk write rows (uses MutateRows - higher throughput)
+let mut rows = vec![wraps::Row::default()];
+wraps::bulk_write_rows(&mut rows, &token, table.clone())?;
 
-const TOKEN_URL: &'static str = "https://www.googleapis.com/oauth2/v4/token";
-const ISS: &'static str = "some-service-account@developer.gserviceaccount.com";
-const PK: &'static str = "pk_for_the_acc_above.pem";
-
-fn read_rows(limit: i64) -> Result<(serde_json::Value), BTErr> {
-
-    let token = get_auth_token(TOKEN_URL, ISS, PK)?;
-    let table = Default::default();
-
-    wraps::read_rows(table, &token, Some(limit))
-
-}
-
-fn write_rows(n: usize, bulk: bool) -> Result<(), BTErr> {
-    let mut rows: Vec<wraps::Row> = vec!(wraps::Row::default()); // put some real data here
-    let token = get_auth_token(TOKEN_URL, ISS, PK)?;
-    let table = Default::default(); // Again use a real table here
-    if bulk {
-        let _ = wraps::bulk_write_rows(&mut rows, &token, table);
-    } else {
-        let _ = wraps::write_rows(&mut rows, &token, table);
-    }
-    Ok(())
-}
+// Write rows one at a time (uses ReadModifyWriteRow)
+let mut rows = vec![wraps::Row::default()];
+wraps::write_rows(&mut rows, &token, &table)?;
 ```
+
+#### Direct API Access
+
+For full control, use the request builder directly:
+
+```rust
+use bigtable::request::BTRequest;
+use bigtable::method::{BigTable, ReadRows, MutateRow};
+use bigtable::utils::{get_auth_token, encode_str};
+use bigtable::protos::data::{Mutation, mutation};
+
+let token = get_auth_token("credentials.json", true)?;
+
+// ReadRows
+let mut req = BTRequest {
+    base: None,
+    table: Default::default(),
+    method: ReadRows::new(),
+};
+req.method.payload_mut().rows_limit = 10;
+let response = req.execute(&token)?;
+
+// MutateRow with SetCell
+let mut req = BTRequest {
+    base: None,
+    table: Default::default(),
+    method: MutateRow::new(),
+};
+
+let mut set_cell = mutation::SetCell::new();
+set_cell.family_name = String::from("cf1");
+set_cell.column_qualifier = encode_str("col1");
+set_cell.timestamp_micros = -1;
+set_cell.value = encode_str("value1");
+
+let mut m = Mutation::new();
+m.mutation = Some(mutation::Mutation::SetCell(set_cell));
+
+req.method.payload_mut().row_key = encode_str("row1");
+req.method.payload_mut().mutations.push(m);
+
+let response = req.execute(&token)?;
+```
+
+### Testing
+
+Integration tests run against a live Bigtable instance:
+
+```bash
+# Run integration tests (requires credentials)
+cargo test --test integration_tests -- --ignored --test-threads=1
+
+# Run doc tests
+cargo test
+```
+
+### Dependencies
+
+- `protobuf` / `protobuf-json-mapping` - Protocol buffer handling and JSON conversion
+- `goauth` / `smpl_jwt` - Google OAuth2 / JWT authentication
+- `curl` - HTTP client
+- `serde_json` - JSON serialization
+
+### License
+
+MIT
